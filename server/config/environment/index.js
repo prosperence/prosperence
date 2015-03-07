@@ -2,6 +2,12 @@
 
 var path = require('path');
 var _ = require('lodash');
+var local = {};
+try {
+  local = require('./../local.env.js');
+} catch(err) {
+  //do nothing
+}
 
 function requiredProcessEnv(name) {
   if(!process.env[name]) {
