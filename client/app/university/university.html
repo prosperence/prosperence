@@ -9,7 +9,7 @@
                  reset-search-input="true"
                  on-select="doSearch($item.title)"
                  title="Search">
-        <ui-select-match placeholder="Search...">{{$select.selected.value}}</ui-select-match>
+        <ui-select-match placeholder="Search...">{{ $select.selected.value }}</ui-select-match>
         <ui-select-choices repeat="suggestedCourse.title as suggestedCourse in suggestedCourses track by $index"
                            refresh="doSuggestor($select.search)"
                            refresh-delay="0">
@@ -43,13 +43,13 @@
         <div>
           <hr>
           <li ng-repeat="(facet,object) in courses.facets" ng-if="courses.results.length">
-            <h5 class="facet-title" ng-bind="facet | uppercase" {{$state.current.name}}></h5>
+            <h5 class="facet-title" ng-bind="facet | uppercase">{{ $state.current.name }}</h5>
             <ul class="facet-list">
               <li ng-repeat="item in object.buckets | limitTo: clickLimit">
                 <a href data-ng-click="doSearchByFilter(facet, item.value)" ng-show="item.value">
                   <input type="checkbox" ng-model="checked[item.value]">
                   <span ng-bind-html="item.label | trust" class="facetText"></span>
-                  ({{item.count | number}})
+                  ({{ item.count | number }})
                 </a>
               </li>
 

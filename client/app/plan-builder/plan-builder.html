@@ -37,15 +37,30 @@
 <!-- Plan builder navigation and progress bar -->
 <div class="container">
   <center>
-    <a class="btn btn-lg btn-default" ng-show="currentState !== 'plan-builder.start'" ng-click="gotoprevious()">
+
+    <!-- Get started options -->
+    <a ng-click="" class="btn btn-lg btn-default disabled" ng-show="currentState === 'plan-builder.start'">
+      Link with Mint.com
+    </a>
+
+    <a ng-click="gotonext()" class="btn btn-lg btn-default" ng-show="currentState === 'plan-builder.start'">
+      Get started with Plan Builder
+    </a>
+
+    <!-- Non-start page buttons -->
+    <a ng-click="gotoprevious()" class="btn btn-lg btn-default" ng-show="currentState !== 'plan-builder.start'">
       <i class="fa fa-chevron-left" style="margin-right:8px;"></i>
       Previous
     </a>
-    <a class="btn btn-lg btn-default" ng-show="currentState !== 'plan-builder.goals'" ng-click="gotonext()">
+
+    <a ng-click="gotonext()" class="btn btn-lg btn-default" ng-show="currentState !== 'plan-builder.goals' && currentState !== 'plan-builder.start'">
       Next
       <i class="fa fa-chevron-right" style="margin-left:8px;"></i>
     </a>
-    <a class="btn btn-lg btn-default" ng-show="currentState === 'plan-builder.goals'">Submit</a>
+
+    <a class="btn btn-lg btn-default" ng-show="currentState === 'plan-builder.goals'">
+      Submit
+    </a>
     <br><br>
 
     <div class="progress progress-striped active" style="width:50%">
@@ -53,5 +68,8 @@
     </div>
   </center>
 
-  <button class="btn btn-lg btn-default pull-right" ng-click="save()">Save Progress</button>
+  <button ng-click="save()" class="btn btn-lg btn-default pull-right" ng-show="currentState !== 'plan-builder.start'">
+    Save Progress
+  </button>
+  
 </div>

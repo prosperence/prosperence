@@ -3,10 +3,17 @@
 // Development specific configuration
 // ==================================
 module.exports = {
+  // Server IP
+  ip:       process.env.IP ||
+            'localhost',
+
+  // Server port
+  port:     process.env.PORT ||
+            8080,
+
   // MongoDB connection options
   mongo: {
-    uri: 'mongodb://localhost/prosperence-dev'
-  },
+    uri: process.env.MONGOLAB_URI || 'mongodb://localhost/prosperence-dev'
+  }
 
-  seedDB: true
 };
