@@ -373,6 +373,12 @@ module.exports = function(grunt) {
             'server/**/*',
             'server.js'
           ]
+        }, {
+          expand: true,
+          dest: '<%= settings.dist %>',
+          src: [
+            'tests/*'
+          ]
         }]
       },
       styles: {
