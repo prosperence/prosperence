@@ -7,9 +7,9 @@ The user can customize their dashboard in three ways:<br>
 2. From the overview, a user may click the small 'x' button on any given planel (revealed after they click 'Customize My Dashboard') to remove the respective planel from the overview.<br>
 -->
 
-<div class="container">
+<button class="btn btn-primary pull-right" ng-show="!!organizable">Save Layout</button>
+
+<!-- Overview planels -->
+<div class="row flex-container">
   <div class="flex-item highchart-planel" ng-repeat="planel in user.overviewPlanels" ng-include="planelLibrary[planel]"></div>
 </div>
-
-<button class="btn pull-right" ng-click="resetDefaultOverviewPlanels()">Reset to Default</button>
-<button class="btn pull-right" ng-click="">Customize</button>

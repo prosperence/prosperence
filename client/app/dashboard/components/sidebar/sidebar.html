@@ -1,13 +1,28 @@
 <!-- Dashboard Sidebar HTML Template -->
 
 <ul ng-controller="DashboardSidebarCtrl" class="nav nav-pills nav-stacked">
-  <li role="presentation" ui-sref-active="active" ng-repeat="item in sidebar">
-    <a ui-sref="{{item.link}}" ng-click="showSubmenu(item)">{{ item.title }}</a>
+  <li role="presentation" ui-sref-active="active" ng-repeat="item in sidebar" style="display:inline">
+    <a ui-sref="{{item.link}}" ng-click="showSubmenu(item)">{{ item.title }}
+
+    <div ng-show="item.dropdown && currentState()===item.link" class="dropdown pull-right" style="position:relative; top:-35px; left:-5px">
+      <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="padding:5px">
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu" role="menu">
+        <li role="presentation" ng-repeat="option in item.dropdown">
+          <a role="menuitem" href="#" ng-click="option.func()">{{ option.text }}</a>
+        </li>
+      </ul>
+    </div>
+  </a>
+
+
     <!-- TODO: If screen size is small, use the item.icon instead and shrink the sidebar to icons only -->
     <ul ng-show="item.submenu.visible" class="nav submenu">
       <li ng-repeat="sub in item.submenu" class="item">
         <a href="" ng-click="setSubView(sub, item.submenu, item)" ng-class="{ active: sub.active }">{{ sub.title }}</a>
       </li>
     </ul>
+
   </li>
 </ul>

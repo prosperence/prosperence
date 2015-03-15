@@ -5,16 +5,4 @@ angular.module('prosperenceApp')
   $scope.user = Auth.getCurrentUser();
   $scope.plan = $scope.user.plan;
 
-  var defaultOverviewPlanels = [
-    'cash-flow-chart',
-    'income-tax-chart'
-  ];
-
-  $scope.user.overviewPlanels = $scope.user.overviewPlanels || defaultOverviewPlanels;
-
-  // Reset overview planels to defaults.
-  $scope.resetDefaultOverviewPlanels = function() {
-    $scope.user.overviewPlanels = defaultOverviewPlanels;
-  };
-
 });

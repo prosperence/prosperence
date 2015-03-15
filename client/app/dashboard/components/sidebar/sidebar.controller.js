@@ -2,11 +2,16 @@
 
 angular.module('prosperenceApp')
 .controller('DashboardSidebarCtrl', function ($scope, $state) {
+
   // Sidebar information.
   $scope.sidebar = [{
     title: 'Overview',
     link: 'dashboard.overview',
-    icon: ''
+    icon: '',
+    dropdown: [
+      { text: 'Organize Items', func: '' }, // Allow user to drag & drop overview planels to customize order.
+      { text: 'Reset to Default', func: $scope.resetDefaultOverviewPlanels } // Reset overview planels to defaults.
+    ]
   }, {
     title: 'My Plan',
     link: 'dashboard.my-plan',
@@ -75,5 +80,10 @@ angular.module('prosperenceApp')
       selected.submenu.visible = true;
     }
   };
+
+  // Dropdown menu toggle
+  $('.dropdown').click(function() {
+    $('.dropdown-toggle').dropdown('toggle');
+  });
 
 });
