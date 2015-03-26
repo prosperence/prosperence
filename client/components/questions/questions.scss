@@ -1,5 +1,10 @@
-.panel-heading:hover {
-  cursor: pointer;
+.panel-heading {
+
+  :hover {
+    cursor: pointer;
+    text-decoration: none;
+  }
+
 }
 
 .enabled-group .panel-heading {

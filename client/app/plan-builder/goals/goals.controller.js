@@ -2,6 +2,11 @@
 
 angular.module('prosperenceApp')
 .controller('SetGoalsCtrl', function ($scope) {
+  $scope.user.plan.setGoals = $scope.user.plan.setGoals || {};
+
+  // Define the user or plan object that $scope.queries questions should bind to.
+  $scope.plangroup = $scope.user.plan.setGoals;
+
   $scope.queries = [{
     title: 'Retirement Goals',
     type: 'multi',
@@ -19,4 +24,7 @@ angular.module('prosperenceApp')
       bind: 'pensionIncome'
     }]
   }];
+
+  $scope.checkQueriesComplete($scope.queries, $scope.plangroup);
+
 });

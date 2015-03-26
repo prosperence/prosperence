@@ -2,8 +2,10 @@
 
 angular.module('prosperenceApp')
 .controller('DebtsCtrl', function ($scope) {
-  // If plan.debts does not exist, initialize it as an empty object.
   $scope.user.plan.debts = $scope.user.plan.debts || {};
+  
+  // Define the user or plan object that $scope.queries questions should bind to.
+  $scope.plangroup = $scope.user.plan.debts;
 
   // Array of question objects to be asked in the 'Net Worth' section.
   $scope.queries = [{
@@ -79,5 +81,7 @@ angular.module('prosperenceApp')
       required: true
     }]
   }];
+
+  $scope.checkQueriesComplete($scope.queries, $scope.plangroup);
 
 });

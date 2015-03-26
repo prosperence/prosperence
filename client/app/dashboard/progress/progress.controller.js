@@ -2,8 +2,11 @@
 
 angular.module('prosperenceApp')
 .controller('ProgressCtrl', function ($scope) {
-  $scope.temp = {};
 
-  // Check highcharts menu and update if needed. This line must be lower than the last highchart.
-  // $scope.updateChartMenu();
+  // Array of planels to display on the budget page.
+  $scope.progressPlanels = [
+    'net-worth-over-time-chart' // TODO: Make this
+    // 'debt-balance-over-time-chart' // TODO: Make this
+  ];
+
 });

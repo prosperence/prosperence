@@ -21,6 +21,7 @@ var testUser = {
       state: 'CA'
     },
     married: true,
+    differentWorkResidence: false,
     spouseFirstName: 'Spouse',
     spouseLastName: 'User',
     spouseBirthdate: new Date(1989, 8, 6),
@@ -115,17 +116,26 @@ var testUser = {
       grossAnnualW2: 250000,
       grossAnnual1099: 0,
       longCapitalGains: 0,
-      payrollDeductions: 2000,
+      userPayrollDeductions: 2000,
+      spousePayrollDeductions: 500,
       shortCapitalGains: 0,
       spouseGrossAnnualW2: 100000,
       spouseGrossAnnual1099: 0,
-      spousePayrollDeductions: 400,
+      spousePayrollDeductions: 400
     },
-    retirement: {
-      spouseTargetAge: 60,
-      targetAge: 55,
-      targetMonthlyIncome: 8000,
-      pensionMonthlyIncome: 0,
+    insurances: {
+      userHealth: true,
+      spouseHealth: true,
+      userHome: true,
+      userAuto: true,
+      userEmployerLife: 10000,
+      userIndividualLife: 50000,
+      spouseEmployerLife: 10000,
+      spouseIndividualLife: 100000,
+      userEmployerDisability: 2500,
+      userIndividualDisability: 5000,
+      spouseEmployerDisability: 0,
+      spouseIndividualDisability: undefined
     },
     mortgage: {
       homeValue: 500000,
@@ -136,19 +146,14 @@ var testUser = {
       startDate: new Date(2006, 5, 1),
     },
     netWorth: 57000, // Sum of all assets - all liabilities.
-    insurance: {
-      auto: true,
-      disability: 0,
-      employerDisability: undefined,
-      employerLife: 15000,
-      health: true,
-      home: true,
-      life: 0,
-      spouseHealth: true,
-      spouseDisability: 0,
-      spouseEmployerDisability: undefined,
-      spouseEmployerLife: 50000,
-      spouseLife: 10000,
+    retirement: {
+      spouseTargetAge: 60,
+      targetAge: 55,
+      targetMonthlyIncome: 8000,
+      pensionMonthlyIncome: 0,
+    },
+    retirementProjection: {
+      // TODO: Fill in test retirement projection data.
     },
     tax: {
       charitableContributions: 10000,

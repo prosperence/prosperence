@@ -1,5 +1,4 @@
 <!-- For multi-question slides -->
-<!-- TODO: Currently, multi can only support basic input types (text, date, etc. - NOT select, checkboxes, radio). Refacor so that multi can handle any type of input request -->
 
 <div ng-repeat="item in query.subqueries" ng-if="plangroup[item.condition] === 'true' || item.condition === undefined">
   <label>{{ item.question }}</label>
@@ -15,8 +14,11 @@
           ng-model="plangroup[item.bind]"
           class="dropdown"
           ng-required="item.required">
-    <option ng-repeat="option in item.options" value="{{option.value || option}}" class="item">
-      {{ option.text || option }}
+    <option ng-repeat="option in item.options"
+            ng-value="option.value || option"
+            ng-selected="option.value === plangroup[item.bind]"
+            class="item">
+            {{ option.text || option }}
     </option>
   </select>
 

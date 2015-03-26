@@ -2,6 +2,10 @@
 
 angular.module('prosperenceApp')
 .controller('TaxProjectionCtrl', function ($scope) {
+
+  // Define the user or plan object that $scope.queries questions should bind to.
+  $scope.plangroup = $scope.user.plan;
+
   $scope.queries = [{
     title: 'Income Tax Considerations',
     type: 'multi',
@@ -29,4 +33,7 @@ angular.module('prosperenceApp')
       bind:'otherDeductions'
     }]
   }];
+
+  $scope.checkQueriesComplete($scope.queries, $scope.plangroup);
+
 });

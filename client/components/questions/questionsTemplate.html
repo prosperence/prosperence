@@ -9,6 +9,7 @@
   <accordion-group ng-repeat="query in queries"
                    is-open="query.isOpen"
                    is-disabled="!query.isEnabled"
+                   ng-click="openSection($index)"
                    ng-class="{ 'enabled-group': query.isEnabled }">
 
   <accordion-heading>

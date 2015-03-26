@@ -2,6 +2,10 @@
 
 angular.module('prosperenceApp')
 .controller('AssetsCtrl', function ($scope) {
+  $scope.user.plan.assets = $scope.user.plan.assets || {};
+
+  // Define the user or plan object that $scope.queries questions should bind to.
+  $scope.plangroup = $scope.user.plan;
 
   // Array of question objects to be asked in the 'Net Worth' section.
   $scope.queries = [{
@@ -21,8 +25,7 @@ angular.module('prosperenceApp')
       type: 'number',
       textAlign: 'right',
       required: true
-    }],
-    index: 0
+    }]
   }, {
     title: 'Variable Assets',
     question: "Please enter your variable assets (401k, 403b, IRA, Roth IRA, brokerage account, etc.) If you don't have any, feel free to move to the next section.",
@@ -40,8 +43,7 @@ angular.module('prosperenceApp')
       type: 'number',
       textAlign: 'right',
       required: true
-    }],
-    index: 1
+    }]
   }, {
     title: 'Personal Assets',
     question: "These are the kind of assets you may not normally consider, things like your house, car, etc. If you don't have any, feel free to move to the next section.",
@@ -112,5 +114,7 @@ angular.module('prosperenceApp')
       condition: 'hasMortgage'
     }]
   }];
+
+  $scope.checkQueriesComplete($scope.queries, $scope.plangroup);
 
 });

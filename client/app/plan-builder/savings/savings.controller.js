@@ -3,6 +3,9 @@
 angular.module('prosperenceApp')
 .controller('SavingsCtrl', function ($scope) {
 
+  // Define the user or plan object that $scope.queries questions should bind to.
+  $scope.plangroup = $scope.user.plan;
+  
   // Array of question objects to be asked in the 'Savings' section.
   $scope.queries = [{
     title: 'Non-Retirement Savings', // Emergency reserves, 'new home fund', etc.
@@ -35,5 +38,7 @@ angular.module('prosperenceApp')
       type: 'number' // TODO: This should be a select option.
     }]
   }];
+
+  $scope.checkQueriesComplete($scope.queries, $scope.plangroup);
 
 });

@@ -2,6 +2,11 @@
 
 angular.module('prosperenceApp')
 .controller('InsurancesCtrl', function ($scope) {
+  $scope.user.plan.insurances = $scope.user.plan.insurances || {};
+
+  // Define the user or plan object that $scope.queries questions should bind to.
+  $scope.plangroup = $scope.user.plan;
+
   $scope.queries = [{
     title: 'Health Insurance',
     question: 'Health insurance is important and legally required.  The most important thing is that you have it.',
@@ -84,4 +89,7 @@ angular.module('prosperenceApp')
       condition: 'maritalStatus'
     }]
   }];
+
+  $scope.checkQueriesComplete($scope.queries, $scope.plangroup);
+
 });
