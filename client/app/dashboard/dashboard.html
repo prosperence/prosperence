@@ -11,17 +11,7 @@
 
     <!--Sidebar content-->
     <div class="col-sm-2">
-      <ul class="nav nav-pills nav-stacked">
-        <li role="presentation" ui-sref-active="active" ng-repeat="item in sidebar">
-          <a ui-sref="{{item.link}}" ng-click="showSubmenu(item)">{{ item.title }}</a>
-          <!-- TODO: If screen size is small, use the item.icon instead and shrink the sidebar to icons only -->
-          <ul ng-show="item.submenu.visible" class="nav submenu">
-            <li ng-repeat="sub in item.submenu" class="item">
-              <a href="" ng-click="setSubView(sub, item.submenu, item)" ng-class="{ active: sub.active }">{{ sub.title }}</a>
-            </li>
-          </ul>
-        </li>
-      </ul>
+      <div ng-include="'app/dashboard/components/sidebar/sidebar.html'"></div>
     </div>
 
     <!--Body content-->

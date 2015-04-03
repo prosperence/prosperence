@@ -1,7 +1,7 @@
 <header class="hero-unit" id="banner">
   <div class="row">
     <label>
-      <h1>Plan Builder: {{heading}}</h1>
+      <h1>Plan Builder: {{ heading }}</h1>
     </label>
   </div>
 </header>
@@ -13,15 +13,12 @@
     <div class="col-sm-2" style="max-width:220px;">
       <ul class="nav nav-pills nav-stacked" style="min-width:120px;">
         <!-- TODO: Make links disabled until previous sections are completed (allow user to go back and forth between completed sections and the one they're currently working on) -->
-        <li role="presentation" ui-sref-active="active"><a ui-sref="plan-builder.start">Introduction</a></li>
-        <li role="presentation" ui-sref-active="active"><a ui-sref="plan-builder.basics">Personal Info</a></li>
-        <li role="presentation" ui-sref-active="active"><a ui-sref="plan-builder.assets">Assets</a></li>
-        <li role="presentation" ui-sref-active="active"><a ui-sref="plan-builder.debts">Debts</a></li>
-        <li role="presentation" ui-sref-active="active"><a ui-sref="plan-builder.spending">Spending</a></li>
-        <li role="presentation" ui-sref-active="active"><a ui-sref="plan-builder.savings">Savings</a></li>
-        <li role="presentation" ui-sref-active="active"><a ui-sref="plan-builder.insurances">Insurances</a></li>
-        <li role="presentation" ui-sref-active="active"><a ui-sref="plan-builder.tax">Tax Questions</a></li>
-        <li role="presentation" ui-sref-active="active"><a ui-sref="plan-builder.goals">Goals</a></li>
+        <li role="presentation" ui-sref-active="active" ng-repeat="section in sections" ng-disabled="!section.enabled">
+          <a ui-sref="{{ section.state }}">
+            <span ng-class="{ 'glyphicon glyphicon-ok': section.complete }" style="color:green; padding-right:4px;"></span>
+            {{ section.text }}
+          </a>
+        </li>
       </ul>
     </div>
 
@@ -37,15 +34,30 @@
 <!-- Plan builder navigation and progress bar -->
 <div class="container">
   <center>
-    <a class="btn btn-lg btn-default" ng-show="currentState !== 'plan-builder.start'" ng-click="gotoprevious()">
+
+    <!-- Get started options -->
+    <a ng-click="" class="btn btn-lg btn-default disabled" ng-show="currentState === 'plan-builder.start'">
+      Link with Mint.com
+    </a>
+
+    <a ng-click="gotonext()" class="btn btn-lg btn-default" ng-show="currentState === 'plan-builder.start'">
+      Get started with Plan Builder
+    </a>
+
+    <!-- Non-start page buttons -->
+    <a ng-click="gotoprevious()" class="btn btn-lg btn-default" ng-show="currentState !== 'plan-builder.start'">
       <i class="fa fa-chevron-left" style="margin-right:8px;"></i>
       Previous
     </a>
-    <a class="btn btn-lg btn-default" ng-show="currentState !== 'plan-builder.goals'" ng-click="gotonext()">
+
+    <a ng-click="gotonext()" class="btn btn-lg btn-default" ng-show="currentState !== 'plan-builder.goals' && currentState !== 'plan-builder.start'">
       Next
       <i class="fa fa-chevron-right" style="margin-left:8px;"></i>
     </a>
-    <a class="btn btn-lg btn-default" ng-show="currentState === 'plan-builder.goals'">Submit</a>
+
+    <a class="btn btn-lg btn-default" ng-show="currentState === 'plan-builder.goals'">
+      Submit
+    </a>
     <br><br>
 
     <div class="progress progress-striped active" style="width:50%">
@@ -53,5 +65,8 @@
     </div>
   </center>
 
-  <button class="btn btn-lg btn-default pull-right" ng-click="save()">Save Progress</button>
+  <button ng-click="save()" class="btn btn-lg btn-default pull-right" ng-show="currentState !== 'plan-builder.start'">
+    Save Progress
+  </button>
+
 </div>

@@ -25,10 +25,10 @@ var all = {
   root: path.normalize(__dirname + '/../../..'),
 
   // Server port
-  port: process.env.PORT || 9000,
+  port: process.env.PORT || 8080,
 
-  // Should we populate the DB with sample data?
-  seedDB: false,
+  // Populate the database with seed data.
+  seedDB: true,
 
   // Secret for session, you will want to change this and make it an environment variable
   secrets: {
@@ -47,6 +47,7 @@ var all = {
     }
   },
 
+  // Amazon CloudSearch connection options
   cloudsearch: {
     accessKeyId: process.env.CLOUDSEARCH_AMAZON_ID || local.CLOUDSEARCH_AMAZON_ID,
     secretAccessKey: process.env.CLOUDSEARCH_AMAZON_SECRET || local.CLOUDSEARCH_AMAZON_SECRET

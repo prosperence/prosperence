@@ -12,14 +12,29 @@
     </tr>
 
     <!-- Load existing items if present -->
-    <tr ng-repeat="items in plangroup[query.bind]">
+    <tr ng-repeat="item in plangroup[query.bind]">
       <td ng-repeat="field in query.fields" style="padding-right:8px;">
-        <input ng-model="plangroup[query.bind][$parent.$index][field.value]"
+        <!-- For basic input types -->
+        <input ng-show="field.type !== 'select'"
+               ng-model="plangroup[query.bind][$parent.$index][field.value]"
                type="{{field.type}}"
                class="form-control"
                style="margin:4px auto; text-align:{{field.textAlign}}"
-               ng-required="{{field.required}}"
-               ng-required="query.required" />
+               ng-required="field.required || query.required"/>
+
+        <!-- For select Options -->
+        <select ng-show="field.type === 'select'"
+                ng-model="planGroup[query.bind][$parent.$index][field.value]"
+                class="dropdown"
+                ng-required="field.required || query.required">
+
+          <option ng-repeat="option in field.options"
+                  ng-value="option.value || option"
+                  class="item"
+                  ng-selected="compare(plangroup[query.bind][$parent.$index + $parent.$parent.$index][field.value], option.value, option)">
+                  {{ option.text || option }}
+          </option>
+        </select>
       </td>
       <td>
         <button class="btn"

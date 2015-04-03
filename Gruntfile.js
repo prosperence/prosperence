@@ -51,7 +51,7 @@ module.exports = function(grunt) {
     },
     open: {
       server: {
-        url: 'http://localhost:<%= express.options.port %>'
+        url: 'http://127.0.0.1:<%= express.options.port %>'
       }
     },
     watch: {
@@ -372,6 +372,12 @@ module.exports = function(grunt) {
             'package.json',
             'server/**/*',
             'server.js'
+          ]
+        }, {
+          expand: true,
+          dest: '<%= settings.dist %>',
+          src: [
+            'tests/*'
           ]
         }]
       },

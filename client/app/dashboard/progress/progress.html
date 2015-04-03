@@ -1,9 +1,5 @@
 <!-- HTML Template for the my-university view of the dashboard -->
 
-<div class="container col-md-12">
-  <div class="row">
-    <p>
-      This should display helpful and interesting stats of the users' progress over time. Each as planel directive element (if you don't know what that is, find out before doing anything).
-    </p>
-  </div>
+<div class="col-md-12 row flex-container">
+  <div class="flex-item highchart-planel" ng-repeat="planel in progressPlanels" ng-include="planelLibrary[planel]"></div>
 </div>

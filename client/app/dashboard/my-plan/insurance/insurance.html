@@ -1,5 +1,5 @@
 <!-- Insurance view template within My-Plan -->
 
-<div ng-controller="InsuranceCtrl">
-  <h1>This is the Insurance view</h1>
+<div ng-controller="InsuranceCtrl" class="row flex-container">
+  <div class="flex-item highchart-planel" ng-repeat="planel in insurancePlanels" ng-include="planelLibrary[planel]"></div>
 </div>

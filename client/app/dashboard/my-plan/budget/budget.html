@@ -1,6 +1,5 @@
 <!-- Budget view template within My-Plan -->
 
-<div ng-controller="BudgetCtrl">
-  <div id="cashFlowAnalysisContainer" style="min-width: 310px; max-width: 600px; height: 400px; margin: 0 auto"></div>
-  <div id="taxContainer" style="min-width: 310px; max-width: 600px; height: 400px; margin: 0 auto"></div>
+<div ng-controller="BudgetCtrl" class="row flex-container">
+  <div class="flex-item highchart-planel" ng-repeat="planel in budgetPlanels" ng-include="planelLibrary[planel]"></div>
 </div>

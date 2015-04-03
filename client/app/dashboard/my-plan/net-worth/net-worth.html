@@ -1,5 +1,5 @@
 <!-- Net Worth view template within My-Plan -->
 
-<div ng-controller="NetWorthCtrl">
-  <div id="netWorthContainer" style="min-width: 310px; max-width: 600px; height: 400px; margin: 0 auto"></div>
+<div ng-controller="NetWorthCtrl" class="row flex-container">
+  <div class="flex-item highchart-planel" ng-repeat="planel in netWorthPlanels" ng-include="planelLibrary[planel]"></div>
 </div>

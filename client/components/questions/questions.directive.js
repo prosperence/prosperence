@@ -20,16 +20,68 @@ angular.module('prosperenceApp')
       $scope.queries[0].isOpen = true;
       $scope.queries[0].isEnabled = true;
 
-      // Enable the next accordion section each time the user moves to a new section.
-      $scope.enableNext = function(index) {
+      // Enables the next accordion section.
+      function enableNextQuestion(index) {
         if (typeof index === 'number' && $scope.queries[index+1]) {
           $scope.queries[index + 1].isEnabled = true;
         }
       };
-      // TODO: Previously enabled sections should remain enables if the user goes back.
 
-      // Advances the focus of the user to the next fillable field when 'enter' is pressed.
+      // Disables the next accordion section.
+      function disableNextQuestions(index) {
+        if (typeof index === 'number') {
+          while ($scope.queries[index+1]) {
+            $scope.queries[index + 1].isEnabled = false;
+            index++;
+          }
+        }
+      };
+
+      // Returns the index of the currently open section.
+      function currentlyOpen() {
+        for (var i=0, n=$scope.queries.length; i<n; i++) {
+          if ($scope.queries[i].isOpen) return i;
+        }
+        return null;
+      };
+
+      // Check for validity of inputs on current section.
+      $scope.checkValid = function() {
+        var index = currentlyOpen();
+        if (index !== null) {
+          if ($('.ng-invalid:visible').length === 0) {
+            $scope.queries[index].isComplete = true;
+            enableNextQuestion(index);
+            return true;
+          }
+          $scope.queries[index].isComplete = false;
+          disableNextQuestions(index);
+          return false;
+        }
+        return null;
+      };
+
+      // Open specific question section.
+      $scope.openSection = function(target) {
+        var current = currentlyOpen();
+        if (target !== current) {
+          // If target section is before current section, open target section.
+          if (target < current) {
+            $scope.queries[target].isOpen = true;
+          }
+          // If target section is after current section, check for validity before moving.
+          else if ($scope.queries[target].isEnabled) {
+            $scope.queries[target].isOpen = true;
+          } else {
+            $scope.gotonext();
+          }
+        }
+      };
+
+      // Trigger events on keypress.
       $('questions').keypress(function() {
+        $scope.checkValid();
+        // Advance the focus of the user to the next fillable field when 'enter' is pressed.
         if (event.keyCode === 13) {
           var textboxes = $('input:visible');
           var currentIndex;
@@ -38,14 +90,12 @@ angular.module('prosperenceApp')
           }
           // If there is another input field, move focus to that field.
           if (textboxes[currentIndex + 1] !== undefined) {
-            console.log('advancing to next input');
             var nextBox = textboxes[currentIndex + 1];
             nextBox.focus();
             return nextBox.select();
           }
           // If focus is on final input, invoke gotonext() to check validity and move to the next question or section.
           else {
-            console.log('advancing to next invalid input or question');
             $scope.gotonext();
           }
           event.preventDefault();
@@ -69,10 +119,8 @@ angular.module('prosperenceApp')
     controller: function($scope) {
       if ($scope.query.isComplete) $scope.query.isEnabled = true;
 
-      // TODO: Set binding of nested objects.
       // If query is binding to a nested object, recursively track through plan to assign binding.
       var setBinding = function(path) {
-        // debugger;
         if ($scope.plangroup[path[0]] === undefined) {
           if ($scope.query.type === 'table') $scope.plangroup[path[0]] = [];
           else $scope.plangroup[path[0]] = {};
@@ -82,47 +130,20 @@ angular.module('prosperenceApp')
         else $scope.query.bind = path.shift();
       };
 
+      // Check for and correctly assign nested object bindings.
       if (!!$scope.query.bind && $scope.query.bind.split('.').length > 1) {
-        // If plangroup is undefined, then initialize it as an empty object.
-        if ($scope.plangroup === undefined) $scope.plangroup = {};
-        // Set binding to nested property.
+        $scope.plangroup = $scope.plangroup || {};
         setBinding($scope.query.bind.split('.'));
-      }
-
-      // Handle special conditions for multi type questions.
-      if ($scope.query.type === 'multi') {
-        // If a binding is defined for a multi question object, reset binding to the subgroup.
-        if ($scope.query.bind) {
-          $scope.plangroup = $scope.plangroup[$scope.query.bind];
-        }
-        // Look for date type and fix objects cast as strings.
-        for (var key in $scope.query.subqueries) {
-          if ($scope.query.subqueries[key].type === 'date' && typeof $scope.plangroup[$scope.query.subqueries[key].bind] === 'string') {
-            var temp = $scope.plangroup[$scope.query.subqueries[key].bind].split('-');
-            // Create new date obj from above string.
-            var newdate = new Date(temp[0], temp[1], temp[2].slice(0,2));
-            $scope.plangroup[$scope.query.subqueries[key].bind] = newdate;
-          }
-        }
-      }
-
-      // Check and fix data formatting for non multi-nested date objects.
-      if ($scope.query.type === 'date' && typeof $scope.plangroup[$scope.query.bind] === 'string') {
-        var temp = $scope.plangroup[$scope.query.bind].split('-');
-        // Create new date obj from above string.
-        var newdate = new Date(temp[0], temp[1], temp[2].slice(0,2));
-        $scope.plangroup[$scope.query.bind] = newdate;
       }
 
       // Creates a new row for the input table.
       var makeRow = function() {
         var row = {};
-        for(var i = 0; i < $scope.query.fields.length; i++) {
+        for (var i=0, n=$scope.query.fields.length; i<n; i++) {
           row[$scope.query.fields[i].label] = '';
         }
         return row;
       };
-
       $scope.addRow = function(property) {
         $scope.plangroup[property] = $scope.plangroup[property] || [];
         $scope.plangroup[property].push(makeRow());
@@ -130,17 +151,58 @@ angular.module('prosperenceApp')
       $scope.deleteRow = function(index, property) {
         $scope.plangroup[property].splice(index, 1);
       };
-      $scope.isEnabled = function(title) {
-        return $scope.sections.enabled[title];
-      };
-      $scope.isComplete = function(title) {
-        return $scope.sections.complete[title];
+
+      // Compares the first input parameter with all other parameters passed in. Not deep compare.
+      $scope.compare = function(base) {
+        var args = Array.prototype.slice.apply(arguments);
+        for (var i=1, n=args.length; i<n; i++) {
+          if (base === args[i]) {
+            return true;
+          }
+        }
+        return false;
       };
 
-      // If property is empty and input type is a table, start with an empty row.
-      if ($scope.query.type === 'table') {
-        $scope.plangroup[$scope.query.bind] = $scope.plangroup[$scope.query.bind] || [makeRow()];
-      }
+      // Check and fix data formatting for non multi-nested date objects.
+      var fixDate = function(str) {
+        var temp = str.split('-');
+        return new Date(temp[0], temp[1]-1, temp[2].slice(0,2));
+      };
+      var checkDate = function(query) {
+        if (query.type === 'date' && typeof $scope.plangroup[query.bind] === 'string') {
+          $scope.plangroup[query.bind] = fixDate($scope.plangroup[query.bind]);
+        }
+      };
+      checkDate($scope.query);
+
+      // Initialization object to handle edge cases for specific question types.
+      var init = {
+        multi: function(query) {
+          // If a binding is defined for a multi question object, reset binding to the subgroup.
+          if (query.bind) {
+            $scope.plangroup = $scope.plangroup[query.bind];
+          }
+          // Check for and handle edge cases for subqueries.
+          for (var key in query.subqueries) {
+            checkDate(query.subqueries[key]);
+            if (init[query.subqueries[key].type]) init[query.subqueries[key].type](query.subqueries[key]);
+          }
+        },
+        table: function(query) {
+          // If table has no rows, initialize with an empty row.
+          $scope.plangroup[query.bind] = $scope.plangroup[query.bind] || [makeRow()];
+
+          for (var row in $scope.plangroup[query.bind]) {
+            for (var i=0, n=query.fields.length; i<n; i++) {
+              var current = query.fields[i];
+              if (current.type === 'date' && typeof $scope.plangroup[query.bind][row][current.value] === 'string') {
+                $scope.plangroup[query.bind][row][current.value] = fixDate($scope.plangroup[query.bind][row][current.value]);
+              }
+            }
+          }
+        }
+      };
+      if (init[$scope.query.type]) init[$scope.query.type]($scope.query);
     },
     templateUrl: 'components/questions/questionTemplate.html'
   };

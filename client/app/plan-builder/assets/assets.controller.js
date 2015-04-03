@@ -2,6 +2,10 @@
 
 angular.module('prosperenceApp')
 .controller('AssetsCtrl', function ($scope) {
+  $scope.user.plan.assets = $scope.user.plan.assets || {};
+
+  // Define the user or plan object that $scope.queries questions should bind to.
+  $scope.plangroup = $scope.user.plan;
 
   // Array of question objects to be asked in the 'Net Worth' section.
   $scope.queries = [{
@@ -21,8 +25,7 @@ angular.module('prosperenceApp')
       type: 'number',
       textAlign: 'right',
       required: true
-    }],
-    index: 0
+    }]
   }, {
     title: 'Variable Assets',
     question: "Please enter your variable assets (401k, 403b, IRA, Roth IRA, brokerage account, etc.) If you don't have any, feel free to move to the next section.",
@@ -40,8 +43,7 @@ angular.module('prosperenceApp')
       type: 'number',
       textAlign: 'right',
       required: true
-    }],
-    index: 1
+    }]
   }, {
     title: 'Personal Assets',
     question: "These are the kind of assets you may not normally consider, things like your house, car, etc. If you don't have any, feel free to move to the next section.",
@@ -63,7 +65,6 @@ angular.module('prosperenceApp')
   }, {
     title: 'Primary Residence',
     type: 'multi',
-    bind: 'mortgage',
     subqueries: [{
       question: 'Do you own a home?',
       type: 'select',
@@ -78,7 +79,7 @@ angular.module('prosperenceApp')
     }, {
       question: 'What is the approximate current market value of your home?',
       type: 'number',
-      bind: 'homeValue',
+      bind: 'mortgage.homeValue',
       condition: 'hasPrimaryResidence'
     }, {
       question: 'Do you have a mortgage for your primary residence?',
@@ -88,29 +89,32 @@ angular.module('prosperenceApp')
     }, {
       question: 'What is the current balance owed on your mortgage?',
       type: 'number',
-      bind: 'currentBalance',
+      bind: 'mortgage.currentBalance',
       condition: 'hasMortgage'
     }, {
       question: 'What is the interest rate on your mortgage?',
       type: 'number',
-      bind: 'currentRate',
+      bind: 'mortgage.currentRate',
       condition: 'hasMortgage'
     }, {
       question: 'What is the term of your mortgage (in years)?',
       type: 'number',
-      bind: 'currentTerm',
+      bind: 'mortgage.currentTerm',
       condition: 'hasMortgage'
     }, {
       question: 'What was the principal, or balance owed, of your mortgage initially or when you last refinanced (whichever was more recent)?',
       type: 'number',
-      bind: 'initialBalance',
+      bind: 'mortgage.initialBalance',
       condition: 'hasMortgage'
     }, {
       question: 'When did you purchase or last refinance your home (whichever was most recent)?',
       type: 'month',
-      bind: 'startDate',
+      bind: 'mortgage.startDate',
       condition: 'hasMortgage'
     }]
   }];
+  $scope.setQueries($scope.queries);
+
+  $scope.checkQueriesComplete($scope.queries, $scope.plangroup);
 
 });

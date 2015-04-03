@@ -1,128 +1,138 @@
 'use strict';
 
 angular.module('prosperenceApp')
-.controller('DashboardCtrl', function ($scope, $state, CalcsService, Auth) {
+.controller('DashboardCtrl', function ($scope, $state, User, Auth, CalcsService) {
   $scope.user = Auth.getCurrentUser();
   $scope.plan = $scope.user.plan;
-  // $scope.planelLibrary = $scope.planelLibrary || {};
-  $scope.user.overviewPlanels = $scope.user.overviewPlanels || {};
 
-  // Calculates and return the total of a given group.
+  /*
+   *  Overview defaults and helper functions.
+  */
+
+  // Return name of current state.
+  $scope.currentState = function() {
+    return $state.current.name;
+  };
+
+  // Returns the full path of the input within ./dashboard/.
+  $scope.getPath = function(localPath) {
+    return 'app/dashboard/' + localPath;
+  };
+
+  // Returns the full path of the target planel.
+  $scope.getPlanelPath = function(target) {
+    return $scope.getPath('planels/' + target + '/' + target + '.html');
+  };
+
+  // Object to keep ALL planel names and locations organized.
+  $scope.planelLibrary = {
+    'cash-flow-chart': $scope.getPlanelPath('cash-flow-chart'),
+    'debt-balance-over-time-chart': $scope.getPlanelPath('debt-balance-over-time-chart'),
+    'debt-reduction-chart': $scope.getPlanelPath('debt-reduction-chart'),
+    'income-tax-chart': $scope.getPlanelPath('income-tax-chart'),
+    'net-worth-chart': $scope.getPlanelPath('net-worth-chart'),
+    'retirement-savings-growth-chart': $scope.getPlanelPath('retirement-savings-growth-chart'),
+    'net-worth-over-time-chart': $scope.getPlanelPath('net-worth-over-time-chart')
+  };
+
+  // Overview default planels.
+  var defaultOverviewPlanels = [
+    'cash-flow-chart',
+    'net-worth-over-time-chart',
+    'debt-balance-over-time-chart',
+    'income-tax-chart'
+  ];
+
+  // If user hasn't customized their overview yet, set it to the default planels.
+  $scope.user.overviewPlanels = $scope.user.overviewPlanels || defaultOverviewPlanels.slice();
+
+  // Reset overview planels to defaults.
+  $scope.resetDefaultOverviewPlanels = function() {
+    $scope.user.overviewPlanels = defaultOverviewPlanels.slice();
+  };
+
+  // Allow user to drag and drop the planels to customize the overview.
+  $scope.oranizable = false;
+
+  // TODO: Toggle ability to reorganize overview planels.
+  $scope.toggleOrganizability = function() {
+    //
+  };
+
+
+  /*
+   *  Highcharts logic and helper functions.
+  */
+
+  // Normalizes a given input number to an approximate monthly frequency.
+  var normalizeMonthly = {
+    'Weekly': function(num) {
+      return ( num * 52 / 12 );
+    },
+    'Monthly': function(num) {
+      return num;
+    },
+    'Semi-Annually': function(num) {
+      return ( num * 2 / 12 );
+    },
+    'Annually': function(num) {
+      return ( num / 12 );
+    }
+  };
+
+  // Calculate and return the total of a given group.
   $scope.sumGroup = function(group) {
     var total = 0;
     for (var key in group) {
-      if (typeof group[key] === 'number') total += group[key];
-      else total += group[key]['amount'];
+      if (typeof group[key] === 'number') {
+        total += group[key];
+      } else if (!!normalizeMonthly[group[key]['frequency']]) {
+        total += normalizeMonthly[group[key]['frequency']](group[key]['amount']);
+      } else {
+        total += group[key]['amount'];
+      }
     }
     return total;
   };
 
+  // Builds an array of data for Highcharts from a plan group.
+  $scope.buildHighchartData = function(obj) {
+    var data = [];
+    for (var key in obj) {
+      data.push({ name:obj[key]['name'] || key, y:obj[key]['amount'] });
+    }
+    return data;
+  };
+
+
+  /*
+   *  Planel/Overview logic and methods.
+  */
+
   // Add planel to overview.
   $scope.addPlanel = function(planel) {
-    if (!$scope.user.overviewPlanels[planel.selector]) {
-      $scope.user.overviewPlanels[planel.userOptions.title.text] = planel.renderTo;
+    if ($scope.user.overviewPlanels.indexOf(planel) === -1) {
+      $scope.user.overviewPlanels.push(planel);
     }
-    console.log(planel.renderTo);
   };
 
   // Remove planel from overview.
   $scope.removePlanel = function(planel) {
-    // If state = overview, Remove element from DOM
-    if ($state.current.name === 'dashboard.overview') {
-      $('#' + planel.renderTo.id).remove();
-    }
-    // Remove element from overviewPlanels object.
-    delete $scope.user.overviewPlanels[planel.userOptions.title.text];
-  };
-
-  // If overview is undefined, then load default planels.
-  // if (!$scope.user.overviewPlanels) {
-  //   $scope.user.overviewPlanels = {};
-  //   $scope.addPlanel($scope.planelLibrary['#cashFlowAnalysisContainer']);
-  // }
-
-  // Defines initial view conditions for my-plan and settings.
-  $scope.myPlanView = $scope.myPlanView || getPath('my-plan/net-worth/net-worth.html');
-  $scope.settingsView = $scope.settingsView || getPath('settings/basic/basic.html');
-
-  // Sidebar information.
-  $scope.sidebar = [{
-    title: 'Overview',
-    link: 'dashboard.overview',
-    icon: ''
-  }, {
-    title: 'My Plan',
-    link: 'dashboard.my-plan',
-    icon: '',
-    setView: 'myPlanView',
-    submenu: [{
-      title: 'Net Worth',
-      view: getPath('my-plan/net-worth/net-worth.html'),
-      active: true
-    }, {
-      title: 'Budget',
-      view: getPath('my-plan/budget/budget.html')
-    }, {
-    //   title: 'Insurance',
-    //   view: getPath('my-plan/insurance/insurance.html')
-    // }, {
-      title: 'Retirement',
-      view: getPath('my-plan/retire/retire.html')
-    }, {
-      title: 'Add More',
-      view: getPath('my-plan/more/more.html')
-    }]
-  }, {
-    title: 'Progress',
-    link: 'dashboard.progress',
-    icon: ''
-  }, {
-    title: 'My University',
-    link: 'dashboard.university',
-    icon: ''
-  }, {
-    title: 'Settings',
-    link: 'dashboard.settings',
-    icon: 'glyphicon glyphicon-cog',
-    setView: 'settingsView',
-    submenu: [{
-      title: 'Basic',
-      view: getPath('settings/basic/basic.html'),
-      active: true
-    }, {
-      title: 'Notifications',
-      view: getPath('settings/notifications/notifications.html')
-    }, {
-      title: 'Security',
-      view: getPath('settings/security/security.html')
-    }]
-  }];
-
-  // Check and set submenu viewability on load/state enter.
-  for (var i=0; i<$scope.sidebar.length; i++) {
-    if ($state.current.name === $scope.sidebar[i].link && $scope.sidebar[i].submenu) {
-      $scope.sidebar[i].submenu.visible = true;
-    }
-  }
-
-  // Returns the full path of the input within ./dashboard/.
-  function getPath(localPath) {
-    return 'app/dashboard/' + localPath;
-  }
-
-  // Sets visibility of submenus in the sidebar.
-  $scope.showSubmenu = function(selected) {
-    // Reset all submenus to not visible.
-    for (var i=0; i<$scope.sidebar.length; i++) {
-      if ($scope.sidebar[i].submenu) {
-        $scope.sidebar[i].submenu.visible = false;
-      }
-    }
-    // Set selected sidebar submenu to visible.
-    if (!!selected && selected.submenu) {
-      selected.submenu.visible = true;
+    var index = $scope.user.overviewPlanels.indexOf(planel);
+    if (index !== -1) {
+      $scope.user.overviewPlanels.splice(index, 1);
+      $scope.$apply();
     }
   };
+
+
+  /*
+   *  Sidebar and submenu logic and methods.
+  */
+
+  // Defines initial view conditions for my-plan and settings if undefined.
+  $scope.myPlanView = $scope.myPlanView || $scope.getPath('my-plan/net-worth/net-worth.html');
+  $scope.settingsView = $scope.settingsView || $scope.getPath('settings/basic/basic.html');
 
   // Sets the current view for my-plan.
   $scope.setSubView = function(sub, submenu, section) {
@@ -139,11 +149,11 @@ angular.module('prosperenceApp')
       Highcharts.getOptions().exporting.buttons.contextButton.menuItems.shift();
       Highcharts.getOptions().exporting.buttons.contextButton.menuItems.unshift({
         text: 'Remove from Overview',
-        onclick: function() { $scope.removePlanel(this) }
+        onclick: function() { $scope.removePlanel(this.renderTo.id) }
       });
       Highcharts.getOptions().exporting.buttons.contextButton.menuItems.unshift({
         text: 'Add to Overview',
-        onclick: function() { $scope.addPlanel(this) }
+        onclick: function() { $scope.addPlanel(this.renderTo.id) }
       });
     }
   };

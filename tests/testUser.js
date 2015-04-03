@@ -21,6 +21,7 @@ var testUser = {
       state: 'CA'
     },
     married: true,
+    differentWorkResidence: false,
     spouseFirstName: 'Spouse',
     spouseLastName: 'User',
     spouseBirthdate: new Date(1989, 8, 6),
@@ -36,8 +37,8 @@ var testUser = {
     },
     hasChildren: true,
     children: [
-      { name: 'Child 1 Name', birthdate: new Date(2013, 3, 17) },
-      { name: 'Child 2 Name', birthdate: new Date(2015, 2, 14) }
+      { name: 'Child 1 Name', birthdate: new Date(2013, 2, 17) },
+      { name: 'Child 2 Name', birthdate: new Date(2015, 3, 14) }
     ],
   },
   // The plan property will contain the majority of the user's plan data.
@@ -60,38 +61,61 @@ var testUser = {
         { name: 'Spouse Rollover IRA', amount: 17000, tax: 'pretax' }
       ],
     },
-    // contributions objects must be the name of the user's fixed or variable assets and stored as monthly contributions.
     contributions: {
-      'User 401k': {
-        amount: 1000,
-        type: 'employer' // 'employer', 'individual', or 'non-retirement'
-      },
-      'User Roth IRA': {
-        amount: 100,
-        type: 'individual'
-      },
-      'Spouse 401k': {
-        amount: 400,
-        type: 'employer'
-      },
-      'Some Other Savings Account': {
+      reserves: [{
+        name: 'Some Other Savings Account',
         amount: 50,
+        frequency: 'Weekly', // 'Weekly', 'Monthly', 'Semi-Annually', 'Annually'
         type: 'non-retirement'
-      }
+      }],
+      earlyRetirement: [{
+        name: 'Brokerage Account',
+        amount: 250,
+        frequency: 'Weekly',
+        type: 'non-retirement'
+      }],
+      retirement: [{
+        name: 'User 401k', // contributions objects must be the name of the user's fixed or variable assets.
+        amount: 1000,
+        frequency: 'Monthly',
+        type: 'employer' // 'employer', 'individual', 'non-retirement'
+      }, {
+        name: 'User Roth IRA',
+        amount: 100,
+        frequency: 'Weekly',
+        type: 'individual'
+      }, {
+        name: 'Spouse 401k',
+        amount: 400,
+        frequency: 'Monthly',
+        type: 'employer'
+      }]
     },
     debts: {
       creditCards: [
         { name: 'VISA', rate: 10.99, amount: 5000 },
-        { name: 'Chase Credit Card', rate: 15.99, amount: 4000 },
+        { name: 'Chase Credit Card', rate: 15.99, amount: 4000 }
       ],
       other: [
         { name: 'Auto Loan', rate: 0.9, amount: 35000 },
-        { name: 'Disney Wedding Loan', rate: 9.5, amount: 41000 }
+        { name: 'Speedboat Loan', rate: 9.5, amount: 41000 }
       ],
       studentLoans: [
         { name: 'Federal Stafford', rate: 6.8, amount: 150000 },
         { name: 'Federal Perkins', rate: 5.0, amount: 50000 }
       ],
+    },
+    // TODO: Add debt reduction projection logic to server process.
+    debtProjection: {
+      debts: [ // Debts in order of repayment priority.
+        { name: 'VISA', rate: 10.99, amount: 5000, minPay: 50 },
+        { name: 'Chase Credit Card', rate: 15.99, amount: 4000, minPay: 100 },
+        { name: 'Auto Loan', rate: 0.9, amount: 35000, minPay: 75 },
+        { name: 'Speedboat Loan', rate: 9.5, amount: 41000, minPay: 150 },
+        { name: 'Federal Stafford', rate: 6.8, amount: 150000, minPay: 100 },
+        { name: 'Federal Perkins', rate: 5.0, amount: 50000, minPay: 150 }
+      ],
+      schedule: {}
     },
     expenses: {
       fixed: [
@@ -115,17 +139,26 @@ var testUser = {
       grossAnnualW2: 250000,
       grossAnnual1099: 0,
       longCapitalGains: 0,
-      payrollDeductions: 2000,
+      userPayrollDeductions: 2000,
+      spousePayrollDeductions: 500,
       shortCapitalGains: 0,
       spouseGrossAnnualW2: 100000,
       spouseGrossAnnual1099: 0,
-      spousePayrollDeductions: 400,
+      spousePayrollDeductions: 400
     },
-    retirement: {
-      spouseTargetAge: 60,
-      targetAge: 55,
-      targetMonthlyIncome: 8000,
-      pensionMonthlyIncome: 0,
+    insurances: {
+      userHealth: true,
+      spouseHealth: true,
+      userHome: true,
+      userAuto: true,
+      userEmployerLife: 10000,
+      userIndividualLife: 50000,
+      spouseEmployerLife: 10000,
+      spouseIndividualLife: 100000,
+      userEmployerDisability: 2500,
+      userIndividualDisability: 5000,
+      spouseEmployerDisability: 0,
+      spouseIndividualDisability: undefined
     },
     mortgage: {
       homeValue: 500000,
@@ -136,19 +169,14 @@ var testUser = {
       startDate: new Date(2006, 5, 1),
     },
     netWorth: 57000, // Sum of all assets - all liabilities.
-    insurance: {
-      auto: true,
-      disability: 0,
-      employerDisability: undefined,
-      employerLife: 15000,
-      health: true,
-      home: true,
-      life: 0,
-      spouseHealth: true,
-      spouseDisability: 0,
-      spouseEmployerDisability: undefined,
-      spouseEmployerLife: 50000,
-      spouseLife: 10000,
+    retirement: {
+      spouseTargetAge: 60,
+      targetAge: 55,
+      targetMonthlyIncome: 8000,
+      pensionMonthlyIncome: 0,
+    },
+    retirementProjection: {
+      // TODO: Fill in test retirement projection data.
     },
     tax: {
       charitableContributions: 10000,

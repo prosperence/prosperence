@@ -1,5 +1,5 @@
 <!-- Retirement Projection view template within My-Plan -->
 
-<div ng-controller="RetireCtrl">
-  <div id="retirementContainer" style="min-width: 310px; max-width: 600px; height: 400px; margin: 0 auto"></div>
+<div ng-controller="RetirementCtrl" class="row flex-container">
+  <div class="flex-item highchart-planel" ng-repeat="planel in retirementPlanels" ng-include="planelLibrary[planel]"></div>
 </div>

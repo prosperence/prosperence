@@ -5,6 +5,9 @@ angular.module('prosperenceApp')
   $scope.user.plan = $scope.user.plan || {};
   $scope.user.personal = $scope.user.personal || {};
 
+  // Define the user or plan object that $scope.queries questions should bind to.
+  $scope.plangroup = $scope.user.personal;
+
   // Array of question objects to be asked in the 'Personal Info' section.
   $scope.queries = [{
     title: 'Personal Information',
@@ -90,10 +93,12 @@ angular.module('prosperenceApp')
       required: true,
       fields: [{
         label: 'Child Name',
+        value: 'name',
         type: 'text',
         textAlign: 'left'
       }, {
         label: 'Child Birthdate',
+        value: 'birthdate',
         type: 'date',
         textAlign: 'left'
       }],
@@ -138,5 +143,8 @@ angular.module('prosperenceApp')
       condition: 'workAddress.state'
     }]
   }];
+  $scope.setQueries($scope.queries);
+
+  $scope.checkQueriesComplete($scope.queries, $scope.plangroup);
 
 });

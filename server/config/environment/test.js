@@ -5,6 +5,6 @@
 module.exports = {
   // MongoDB connection options
   mongo: {
-    uri: 'mongodb://localhost/prosperence-test'
+    uri: process.env.MONGOLAB_URI || 'mongodb://localhost/prosperence-test'
   }
 };
