@@ -2,7 +2,8 @@
 <select ng-model="planGroup[query.bind]" class="dropdown" ng-required="query.required">
   <option ng-repeat="option in query.options"
           ng-value="option.value || option"
-          class="item">
+          class="item"
+          ng-selected="planGroup[query.bind] === option.value || planGroup[query.bind] === option">
           {{ option.text || option }}
   </option>
 </select>

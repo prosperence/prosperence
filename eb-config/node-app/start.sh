@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 cd /tmp
 
-rm -R prosperence; true
+rm -rf prosperence
 
 git clone https://github.com/scottrice10/prosperence.git
 

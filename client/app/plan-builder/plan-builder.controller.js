@@ -6,6 +6,8 @@ angular.module('prosperenceApp')
   $scope.user = Auth.getCurrentUser() || {};
   $scope.user.personal = $scope.user.personal || {};
   $scope.user.plan = $scope.user.plan || {};
+  var currentSectionIndex = currentSectionIndex || 0;
+  var queries;
 
   // List of states for location questions.
   $scope.states = [ 'AK', 'AL', 'AR', 'AZ', 'CA', 'CO', 'CT', 'DC', 'DE', 'FL', 'GA', 'HI',
@@ -13,27 +15,17 @@ angular.module('prosperenceApp')
         'MT', 'NC', 'ND', 'NE', 'NH', 'NJ', 'NM', 'NV', 'NY', 'OH', 'OK', 'OR', 'PA', 'RI',
         'SC', 'SD', 'TN', 'TX', 'UT', 'VA', 'VT', 'WA', 'WI', 'WV', 'WY' ];
 
-  // Defines the order of how pages are displayed to the user.
-  var order = [
-    'plan-builder.start',
-    'plan-builder.basics',
-    'plan-builder.assets',
-    'plan-builder.debts',
-    'plan-builder.spending',
-    'plan-builder.savings',
-    'plan-builder.insurances',
-    'plan-builder.tax',
-    'plan-builder.goals'
+  $scope.sections = [
+    { text: 'Introduction', enabled: true, state: 'plan-builder.start' },
+    { text: 'Personal Info', enabled: true, state: 'plan-builder.basics' },
+    { text: 'Assets', enabled: true, state: 'plan-builder.assets' },
+    { text: 'Debts', enabled: true, state: 'plan-builder.debts' },
+    { text: 'Spending', enabled: true, state: 'plan-builder.spending' },
+    { text: 'Savings', enabled: true, state: 'plan-builder.savings' },
+    { text: 'Insurances', enabled: true, state: 'plan-builder.insurances' },
+    { text: 'Taxes', enabled: true, state: 'plan-builder.tax' },
+    { text: 'Goals', enabled: true, state: 'plan-builder.goals' }
   ];
-
-  // Sets the title, progress bar, and the 'previous' and 'next' links.
-  function updateRelationals(focus) {
-    $scope.heading = focus.data.title;
-    $scope.currentState = focus.name;
-    var index = order.indexOf(focus.name);
-    $scope.progress = Math.max(.05, (index / (order.length-1))) * 100 + '%';
-  };
-  updateRelationals($state.current);
 
   // Checks each query object in the current queries object for completeness. Returns boolean.
   $scope.checkQueriesComplete = function(queries, plangroup) {
@@ -95,20 +87,20 @@ angular.module('prosperenceApp')
     return $('.ng-invalid:visible').length === 0;
   };
 
-  var queries, index;
+  // var queries;
   // Move to previous accordion group or section.
   $scope.gotoprevious = function() {
-    queries = $scope.$$childHead.queries;
-    index = order.indexOf($state.current.name);
+    // queries = $scope.$$childHead.queries;
     if (!queries || !!queries[0].isOpen) {
-      $state.go(order[index-1]);
+      $state.go($scope.sections[currentSectionIndex-1].state);
     } else {
+      // Else move to next accordion section.
       var i = queries.length-1;
       while (!queries[i].isOpen) {
         i--;
         // Edge case: if all sections are closed.
         if (i < 0) {
-          return $state.go(order[index-1]);
+          return $state.go($scope.sections[currentSectionIndex-1].state);
         }
       }
       queries[i].isOpen = false;
@@ -123,21 +115,20 @@ angular.module('prosperenceApp')
       $('.ng-invalid:visible').first().focus();
       return;
     }
-
     // If all required query sections are filled in, move to the next plan-builder section.
-    queries = $scope.$$childHead.queries;
-    index = order.indexOf($state.current.name);
-    if (!queries || !!queries[queries.length-1].isOpen) {
-      return $state.go(order[index+1]);
-    }
-    // If user is on the final input, move to the next accordion section.
-    else {
+    // queries = $scope.$$childHead.queries;
+    // var accordions = $('.panel');
+    // console.log(queries)
+    if (!queries || queries[queries.length-1].isOpen) {
+      $state.go($scope.sections[currentSectionIndex+1].state);
+    } else {
+      // Else move to next accordion section.
       var i = 0;
       while (!queries[i].isOpen) {
         i++;
         // Edge case: if all sections are closed.
         if (i >= queries.length) {
-          return $state.go(order[index+1]);
+          return $state.go($scope.sections[currentSectionIndex+1].state);
         }
       }
       queries[i].isComplete = true;
@@ -145,14 +136,22 @@ angular.module('prosperenceApp')
       queries[i+1].isEnabled = true;
       queries[i+1].isOpen = true;
     }
-    $scope.isValid();
   };
 
-  // Update page heading and navbar on state change within plan-builder.
-  // From docs: https://github.com/angular-ui/ui-router/wiki#wiki-state-change-events
+  // Provides $scope access to substate queries objects.
+  $scope.setQueries = function(newQueries) {
+    queries = newQueries;
+  };
+
+  // Update page heading, navbar, and progress bar on state change within plan-builder.
   $scope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
-    if (order.indexOf(toState.name) >= 0) {
-      updateRelationals(toState);
+    for (var i=0, n=$scope.sections.length; i<n; i++) {
+      if ($scope.sections[i].state === toState.name) {
+        $scope.heading = toState.data.title;
+        $scope.currentState = toState.name;
+        $scope.progress = Math.max(.05, (i / (n-1))) * 100 + '%';
+        currentSectionIndex = i;
+      }
     }
   });
 
@@ -160,11 +159,7 @@ angular.module('prosperenceApp')
   // For now, this is being used for testing purposes.
   $scope.save = function(route) {
     console.log('inside $scope.save()');
-
-    console.log('$scope.user.plan');
-    console.log($scope.user.plan);
-
-    // $scope.testBinding();
+    console.log(queries);
   };
 
 });

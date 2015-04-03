@@ -9,6 +9,7 @@ angular.module('prosperenceApp')
   // Array of planels to display on the net worth page.
   $scope.netWorthPlanels = [
     'net-worth-chart',
+    'debt-balance-over-time-chart',
     'net-worth-statement' // TODO: Make nws planel
   ];
 

@@ -93,10 +93,12 @@ angular.module('prosperenceApp')
       required: true,
       fields: [{
         label: 'Child Name',
+        value: 'name',
         type: 'text',
         textAlign: 'left'
       }, {
         label: 'Child Birthdate',
+        value: 'birthdate',
         type: 'date',
         textAlign: 'left'
       }],
@@ -141,6 +143,7 @@ angular.module('prosperenceApp')
       condition: 'workAddress.state'
     }]
   }];
+  $scope.setQueries($scope.queries);
 
   $scope.checkQueriesComplete($scope.queries, $scope.plangroup);
 

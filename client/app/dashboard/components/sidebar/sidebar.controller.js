@@ -39,10 +39,11 @@ angular.module('prosperenceApp')
     link: 'dashboard.progress',
     icon: ''
   }, {
-    title: 'My University',
-    link: 'dashboard.university',
-    icon: ''
-  }, {
+  // TODO: Re-enable this section once the tutorial favorite system is finished.
+  //   title: 'My University',
+  //   link: 'dashboard.university',
+  //   icon: ''
+  // }, {
     title: 'Settings',
     link: 'dashboard.settings',
     icon: 'glyphicon glyphicon-cog',

@@ -7,6 +7,15 @@ angular.module('prosperenceApp')
     currentUser = User.get();
   }
 
+  // Checks current state and redirects to dashboard from main.
+  var updateState = function() {
+    if ($state.current.url === '/') {
+      setTimeout(function() {
+        $state.go('dashboard.overview');
+      }, 50);
+    }
+  };
+
   return {
 
     /**
@@ -27,7 +36,7 @@ angular.module('prosperenceApp')
         $cookieStore.put('token', data.token);
         currentUser = User.get();
         deferred.resolve(data);
-        $state.go('dashboard.overview');
+        updateState();
         return cb();
       })
       .error(function(err) {
@@ -61,6 +70,7 @@ angular.module('prosperenceApp')
         function(data) {
           $cookieStore.put('token', data.token);
           currentUser = User.get();
+          updateState();
           return cb(user);
         },
         function(err) {

@@ -7,8 +7,20 @@ angular.module('prosperenceApp')
   var averages = [];
 
   var variableAssets = $scope.sumGroup($scope.plan.assets.variable);
-  var savings = $scope.sumGroup($scope.plan.contributions);
 
+  // Build savings data.
+  var savingsData = [];
+  var temp;
+  for (var key in $scope.plan.contributions) {
+    if (key === 'reserves') temp = 'Emergency Reserves';
+    else if (key === 'earlyRetirement') temp = 'Early Retirement';
+    else temp = 'Retirement';
+    savingsData.push({
+      name: temp,
+      amount: $scope.sumGroup($scope.plan.contributions[key])
+    });
+  }
+  var savings = $scope.sumGroup(savingsData);
 
   // Calculate user age for start point.
   function calculateAge(birthday) { // birthday is a date

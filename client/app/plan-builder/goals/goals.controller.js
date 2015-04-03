@@ -24,6 +24,7 @@ angular.module('prosperenceApp')
       bind: 'pensionIncome'
     }]
   }];
+  $scope.setQueries($scope.queries);
 
   $scope.checkQueriesComplete($scope.queries, $scope.plangroup);
 

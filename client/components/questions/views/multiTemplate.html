@@ -1,6 +1,6 @@
 <!-- For multi-question slides -->
 
-<div ng-repeat="item in query.subqueries" ng-if="plangroup[item.condition] === 'true' || item.condition === undefined">
+<div ng-repeat="item in query.subqueries" ng-if="item.condition === undefined || item.condition === true || plangroup[item.condition] === true">
   <label>{{ item.question }}</label>
   <!-- TODO: For select, checkbox, radio, button, table, multi, and review questions -->
   <!-- <div
@@ -25,30 +25,30 @@
   <!-- For table entry questions -->
   <div ng-if="item.type === 'table'">
     <form class="">
-      <table ng-class="">
+      <table>
 
         <!-- Build column headers -->
         <tr>
-          <th ng-class="{ 'four wide': field.type === 'number' || field.type === 'date', 'field': true }"
-              ng-repeat="field in item.fields"
-              style="text-align:{{field.textAlign}}; padding:5px;">
-              <label>{{ field.label }}</label>
+          <th ng-repeat="field in item.fields"
+              style="text-align:{{field.textAlign}}">
+            <label>{{ field.label }}</label>
           </th>
           <th></th> <!-- Spaceholder for row delete button -->
         </tr>
 
         <!-- Load existing items if present -->
-        <tr ng-repeat="subitem in plangroup[item.bind]">
-          <td ng-class="{ 'three wide': field.type === 'number', 'field': true }"
-              ng-repeat="field in item.fields"
-              style="padding:5px">
-            <input ng-model="subitem[field.label]"
+        <tr ng-repeat="subitems in plangroup[item.bind]">
+          <td ng-repeat="field in item.fields" style="padding-right:8px;">
+            <input ng-model="plangroup[item.bind][$parent.$index][field.value]"
                    type="{{field.type}}"
-                   style="text-align:{{field.textAlign}}"
-                   ng-required="subitem.required" />
+                   class="form-control"
+                   style="margin:4px auto; text-align:{{field.textAlign}}"
+                   ng-required="{{field.required}}"
+                   ng-required="item.required" />
           </td>
           <td>
             <button class="btn"
+                    style="padding:2px 4px;"
                     ng-click="deleteRow($index, item.bind)">
                     <i class="fa fa-times"></i>
             </button>

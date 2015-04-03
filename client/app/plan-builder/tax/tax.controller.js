@@ -33,6 +33,7 @@ angular.module('prosperenceApp')
       bind:'otherDeductions'
     }]
   }];
+  $scope.setQueries($scope.queries);
 
   $scope.checkQueriesComplete($scope.queries, $scope.plangroup);
 

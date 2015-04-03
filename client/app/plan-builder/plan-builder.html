@@ -1,7 +1,7 @@
 <header class="hero-unit" id="banner">
   <div class="row">
     <label>
-      <h1>Plan Builder: {{heading}}</h1>
+      <h1>Plan Builder: {{ heading }}</h1>
     </label>
   </div>
 </header>
@@ -13,15 +13,12 @@
     <div class="col-sm-2" style="max-width:220px;">
       <ul class="nav nav-pills nav-stacked" style="min-width:120px;">
         <!-- TODO: Make links disabled until previous sections are completed (allow user to go back and forth between completed sections and the one they're currently working on) -->
-        <li role="presentation" ui-sref-active="active"><a ui-sref="plan-builder.start">Introduction</a></li>
-        <li role="presentation" ui-sref-active="active"><a ui-sref="plan-builder.basics">Personal Info</a></li>
-        <li role="presentation" ui-sref-active="active"><a ui-sref="plan-builder.assets">Assets</a></li>
-        <li role="presentation" ui-sref-active="active"><a ui-sref="plan-builder.debts">Debts</a></li>
-        <li role="presentation" ui-sref-active="active"><a ui-sref="plan-builder.spending">Spending</a></li>
-        <li role="presentation" ui-sref-active="active"><a ui-sref="plan-builder.savings">Savings</a></li>
-        <li role="presentation" ui-sref-active="active"><a ui-sref="plan-builder.insurances">Insurances</a></li>
-        <li role="presentation" ui-sref-active="active"><a ui-sref="plan-builder.tax">Tax Questions</a></li>
-        <li role="presentation" ui-sref-active="active"><a ui-sref="plan-builder.goals">Goals</a></li>
+        <li role="presentation" ui-sref-active="active" ng-repeat="section in sections" ng-disabled="!section.enabled">
+          <a ui-sref="{{ section.state }}">
+            <span ng-class="{ 'glyphicon glyphicon-ok': section.complete }" style="color:green; padding-right:4px;"></span>
+            {{ section.text }}
+          </a>
+        </li>
       </ul>
     </div>
 
@@ -71,5 +68,5 @@
   <button ng-click="save()" class="btn btn-lg btn-default pull-right" ng-show="currentState !== 'plan-builder.start'">
     Save Progress
   </button>
-  
+
 </div>

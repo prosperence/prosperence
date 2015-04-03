@@ -2,8 +2,7 @@
 
   <!-- Start video courses catalog -->
   <div id="catalog-photos" class="col-md-10">
-    <div class="col-md-4" ng-repeat="course in courses.results | itemsPerPage: 9 track by $index"
-         dir-paginate="course in courses.results | itemsPerPage: 9 track by $index" total-items="courses.totalCount">
+    <div class="col-md-4" dir-paginate="course in courses.results | itemsPerPage: 9 track by $index" total-items="courses.totalCount">
       <div class="thumbnail">
 
         <div class="embed-responsive embed-responsive-16by9">

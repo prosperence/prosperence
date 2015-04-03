@@ -8,7 +8,19 @@ angular.module('prosperenceApp')
   // Cash Flow Chart Logic
   var fixedExpenses = $scope.sumGroup(expenses.fixed);
   var flexibleExpenses = $scope.sumGroup(expenses.flexible);
-  var savings = $scope.sumGroup($scope.plan.contributions);
+  // Build savings data
+  var savingsData = [];
+  var temp;
+  for (var key in $scope.plan.contributions) {
+    if (key === 'reserves') temp = 'Emergency Reserves';
+    else if (key === 'earlyRetirement') temp = 'Early Retirement';
+    else temp = 'Retirement';
+    savingsData.push({
+      name: temp,
+      amount: $scope.sumGroup($scope.plan.contributions[key])
+    });
+  }
+  var savings = $scope.sumGroup(savingsData);
   var totalCashFlowOut = fixedExpenses + flexibleExpenses + savings;
 
   // http://www.highcharts.com/demo/pie-drilldown
@@ -36,8 +48,9 @@ angular.module('prosperenceApp')
     drilldown: null,
     name: 'Unallocated Income',
     visible: true,
-    y: ($scope.plan.taxProjection.netIncome / 12)/100
+    y: ($scope.plan.taxProjection.netIncome / 12) / 100
   }];
+  // console.log(sliceData)
   var drillDownSlices = [{
     name: 'Fixed Expenses',
     id: 'Fixed Expenses',
@@ -47,9 +60,9 @@ angular.module('prosperenceApp')
     id: 'Flexible Expenses',
     data: $scope.buildHighchartData(expenses.flexible)
   }, {
-    name: 'Long-Term Savings',
+    name: 'Savings',
     id: 'Savings',
-    data: $scope.buildHighchartData($scope.plan.contributions)
+    data: $scope.buildHighchartData(savingsData)
   }];
 
   // Create the chart

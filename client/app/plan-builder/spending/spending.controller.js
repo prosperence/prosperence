@@ -20,21 +20,21 @@ angular.module('prosperenceApp')
       question: 'What is your spouse\'s Gross Annual Income?',
       type: 'number',
       bind: 'spouseGrossAnnualW2',
-      condition: 'married'
+      condition: $scope.user.personal.married
     }]
   }, {
     title: 'Payroll Deductions',
     type: 'multi',
-    bind: 'expenses',
+    bind: 'income',
     subqueries: [{
-      question: "Enter the total deductions from your paycheck (not including retirement contributions):",
+      question: 'Enter the total deductions from your paycheck (not including retirement contributions):',
       bind: 'userPayrollDeductions',
       type:'number'
     }, {
-      question: "Enter the total deductions from your spouce's paycheck (not including retirement contributions):",
+      question: 'Enter the total deductions from your spouce\'s paycheck (not including retirement contributions):',
       bind: 'spousePayrollDeductions',
       type: 'number',
-      condition: 'married'
+      condition: $scope.user.personal.married
     }]
   }, {
     title: 'Fixed Expenses',
@@ -43,9 +43,13 @@ angular.module('prosperenceApp')
     question: 'Fixed expenses are the ones that you would consider necessary to get by (mortgage payments, groceries, utilities, child care expenses, etc.).',
     fields: [{
       label: 'Fixed Expense Name',
+      value: 'name',
+      textAlign: 'left',
       type: 'text'
     }, {
       label: 'Monthly Expense',
+      value: 'amount',
+      textAlign: 'right',
       type: 'number'
     }]
   }, {
@@ -55,12 +59,17 @@ angular.module('prosperenceApp')
     question: 'Flexible expenses are the ones that you could live without if you needed to (travel, dining out, etc.) As you may not travel every month, try to approximate by taking your annual travel expense and dividing it by twelve.',
     fields: [{
       label: 'Flexible Expense Name',
+      value: 'name',
+      textAlign: 'left',
       type: 'text'
     }, {
       label: 'Monthly Expense',
+      value: 'amount',
+      textAlign: 'right',
       type: 'number'
     }]
   }];
+  $scope.setQueries($scope.queries);
 
   $scope.checkQueriesComplete($scope.queries, $scope.plangroup);
 

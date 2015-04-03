@@ -1,7 +1,7 @@
 {
   "AWSEBDockerrunVersion": "1",
   "Image": {
-    "Name": "debian:wheezy"
+    "Name": "ubuntu:14.04"
   },
   "Ports": [
     {

@@ -3,7 +3,7 @@
 angular.module('prosperenceApp')
 .controller('DebtsCtrl', function ($scope) {
   $scope.user.plan.debts = $scope.user.plan.debts || {};
-  
+
   // Define the user or plan object that $scope.queries questions should bind to.
   $scope.plangroup = $scope.user.plan.debts;
 
@@ -81,6 +81,7 @@ angular.module('prosperenceApp')
       required: true
     }]
   }];
+  $scope.setQueries($scope.queries);
 
   $scope.checkQueriesComplete($scope.queries, $scope.plangroup);
 

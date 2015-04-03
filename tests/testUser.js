@@ -37,8 +37,8 @@ var testUser = {
     },
     hasChildren: true,
     children: [
-      { name: 'Child 1 Name', birthdate: new Date(2013, 3, 17) },
-      { name: 'Child 2 Name', birthdate: new Date(2015, 2, 14) }
+      { name: 'Child 1 Name', birthdate: new Date(2013, 2, 17) },
+      { name: 'Child 2 Name', birthdate: new Date(2015, 3, 14) }
     ],
   },
   // The plan property will contain the majority of the user's plan data.
@@ -61,38 +61,61 @@ var testUser = {
         { name: 'Spouse Rollover IRA', amount: 17000, tax: 'pretax' }
       ],
     },
-    // contributions objects must be the name of the user's fixed or variable assets and stored as monthly contributions.
     contributions: {
-      'User 401k': {
-        amount: 1000,
-        type: 'employer' // 'employer', 'individual', or 'non-retirement'
-      },
-      'User Roth IRA': {
-        amount: 100,
-        type: 'individual'
-      },
-      'Spouse 401k': {
-        amount: 400,
-        type: 'employer'
-      },
-      'Some Other Savings Account': {
+      reserves: [{
+        name: 'Some Other Savings Account',
         amount: 50,
+        frequency: 'Weekly', // 'Weekly', 'Monthly', 'Semi-Annually', 'Annually'
         type: 'non-retirement'
-      }
+      }],
+      earlyRetirement: [{
+        name: 'Brokerage Account',
+        amount: 250,
+        frequency: 'Weekly',
+        type: 'non-retirement'
+      }],
+      retirement: [{
+        name: 'User 401k', // contributions objects must be the name of the user's fixed or variable assets.
+        amount: 1000,
+        frequency: 'Monthly',
+        type: 'employer' // 'employer', 'individual', 'non-retirement'
+      }, {
+        name: 'User Roth IRA',
+        amount: 100,
+        frequency: 'Weekly',
+        type: 'individual'
+      }, {
+        name: 'Spouse 401k',
+        amount: 400,
+        frequency: 'Monthly',
+        type: 'employer'
+      }]
     },
     debts: {
       creditCards: [
         { name: 'VISA', rate: 10.99, amount: 5000 },
-        { name: 'Chase Credit Card', rate: 15.99, amount: 4000 },
+        { name: 'Chase Credit Card', rate: 15.99, amount: 4000 }
       ],
       other: [
         { name: 'Auto Loan', rate: 0.9, amount: 35000 },
-        { name: 'Disney Wedding Loan', rate: 9.5, amount: 41000 }
+        { name: 'Speedboat Loan', rate: 9.5, amount: 41000 }
       ],
       studentLoans: [
         { name: 'Federal Stafford', rate: 6.8, amount: 150000 },
         { name: 'Federal Perkins', rate: 5.0, amount: 50000 }
       ],
+    },
+    // TODO: Add debt reduction projection logic to server process.
+    debtProjection: {
+      debts: [ // Debts in order of repayment priority.
+        { name: 'VISA', rate: 10.99, amount: 5000, minPay: 50 },
+        { name: 'Chase Credit Card', rate: 15.99, amount: 4000, minPay: 100 },
+        { name: 'Auto Loan', rate: 0.9, amount: 35000, minPay: 75 },
+        { name: 'Speedboat Loan', rate: 9.5, amount: 41000, minPay: 150 },
+        { name: 'Federal Stafford', rate: 6.8, amount: 150000, minPay: 100 },
+        { name: 'Federal Perkins', rate: 5.0, amount: 50000, minPay: 150 }
+      ],
+      schedule: {}
     },
     expenses: {
       fixed: [

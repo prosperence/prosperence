@@ -89,6 +89,7 @@ angular.module('prosperenceApp')
       condition: 'maritalStatus'
     }]
   }];
+  $scope.setQueries($scope.queries);
 
   $scope.checkQueriesComplete($scope.queries, $scope.plangroup);
 

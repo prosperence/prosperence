@@ -2,7 +2,19 @@
 
 angular.module('prosperenceApp')
 .controller('IncomeTaxChartCtrl', function ($scope, Auth) {
-  var savings = $scope.sumGroup($scope.plan.contributions);
+  // Build savings data
+  var savingsData = [];
+  var temp;
+  for (var key in $scope.plan.contributions) {
+    if (key === 'reserves') temp = 'Emergency Reserves';
+    else if (key === 'earlyRetirement') temp = 'Early Retirement';
+    else temp = 'Retirement';
+    savingsData.push({
+      name: temp,
+      amount: $scope.sumGroup($scope.plan.contributions[key])
+    });
+  }
+  var savings = $scope.sumGroup(savingsData);
 
   // Tax Chart Logic
   // Build the chart
