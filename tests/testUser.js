@@ -4,8 +4,9 @@ var testUser = {
   provider: 'local',
   email: 'test@test.com',
   password: 'test',
-  // Object to track which sections of plan-builder the user has completed.
   builderProgress: {
+    // Object to track which sections of plan-builder the user has completed.
+    start: true,
     basics: true,
     assets: true,
     debts: true,
@@ -15,8 +16,8 @@ var testUser = {
     tax: true,
     goals: true
   },
-  // Contains the user's personal inforamtion (and spouse if applicable).
   personal: {
+    // Contains the user's personal inforamtion (and spouse if applicable).
     firstName: 'Test',
     lastName: 'User',
     birthdate: new Date(1986, 5, 9),
@@ -51,8 +52,8 @@ var testUser = {
       { name: 'Child 2 Name', birthdate: new Date(2015, 3, 14) }
     ],
   },
-  // The plan property will contain the majority of the user's plan data.
   plan: {
+    // The plan property will contain the majority of the user's plan data.
     assets: {
       fixed: [
         { name: 'Primary Checking/Savings Account', amount: 5000, emergencyReserve: false },
