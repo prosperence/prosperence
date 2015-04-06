@@ -23,13 +23,13 @@
                ng-required="field.required || query.required"/>
 
         <!-- For select Options -->
-        <select ng-show="field.type === 'select'"
+        <select ng-if="field.type === 'select'"
                 ng-model="planGroup[query.bind][$parent.$index][field.value]"
                 class="dropdown"
                 ng-required="field.required || query.required">
 
           <option ng-repeat="option in field.options"
-                  ng-value="option.value || option"
+                  ng-value="getOptionValue(option)"
                   class="item"
                   ng-selected="compare(plangroup[query.bind][$parent.$index + $parent.$parent.$index][field.value], option.value, option)">
                   {{ option.text || option }}

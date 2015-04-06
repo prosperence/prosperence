@@ -4,7 +4,7 @@
 // Pease read the Question-Directive-README.md before editing this file.
 **************************************************************************** -->
 
-<div ng-show="query.condition === undefined || query.condition === true || plangroup[query.condition] === true">
+<div ng-show="isShown()">
 
   <p ng-if="!!query.question"><label>{{ query.question }}</label></p>
 

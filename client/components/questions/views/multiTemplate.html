@@ -1,11 +1,12 @@
 <!-- For multi-question slides -->
 
-<div ng-repeat="item in query.subqueries" ng-if="item.condition === undefined || item.condition === true || plangroup[item.condition] === true">
+<div ng-repeat="item in query.subqueries"
+     ng-show="isShown(item)">
   <label>{{ item.question }}</label>
   <!-- TODO: For select, checkbox, radio, button, table, multi, and review questions -->
   <!-- <div
     ng-if = "['select','checkbox','radio','button','table','multi','review'].indexOf(item.type) !== -1"
-    query = "item",
+    query = "item"
     ng-include = "'components/questions/views/'+item.type+'Template.html'">
   </div> -->
 
@@ -15,9 +16,9 @@
           class="dropdown"
           ng-required="item.required">
     <option ng-repeat="option in item.options"
-            ng-value="option.value || option"
-            ng-selected="option.value === plangroup[item.bind]"
-            class="item">
+            ng-value="getOptionValue(option)"
+            class="item"
+            ng-selected="option.value === plangroup[item.bind] || option === plangroup[item.bind]">
             {{ option.text || option }}
     </option>
   </select>
@@ -64,14 +65,8 @@
     </button>
   </div> <!-- End of table objects -->
 
-  <!-- For date objects -->
-  <input ng-if="item.type === 'date'"
-         type="date"
-         ng-model="plangroup[item.bind]"
-         ng-required="item.required" />
-
    <!-- For everything else -->
-   <input ng-if="['select','checkbox','radio','button','table','multi','review','date'].indexOf(item.type) === -1"
+   <input ng-if="['select','checkbox','radio','button','table','multi','review'].indexOf(item.type) === -1"
           type="{{item.type}}"
           ng-model="plangroup[item.bind]"
           ng-required="item.required" />

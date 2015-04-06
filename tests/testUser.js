@@ -4,7 +4,17 @@ var testUser = {
   provider: 'local',
   email: 'test@test.com',
   password: 'test',
-  builderComplete: true, // if the user has completed plan-builder or not.
+  // Object to track which sections of plan-builder the user has completed.
+  builderProgress: {
+    basics: true,
+    assets: true,
+    debts: true,
+    spending: true,
+    savings: true,
+    insurances: true,
+    tax: true,
+    goals: true
+  },
   // Contains the user's personal inforamtion (and spouse if applicable).
   personal: {
     firstName: 'Test',
