@@ -5,8 +5,6 @@ var Schema = mongoose.Schema;
 var crypto = require('crypto');
 
 var UserSchema = new Schema({
-  personal: {},
-  // name: String,
   email: { type: String, lowercase: true },
   role: {
     type: String,
@@ -15,6 +13,19 @@ var UserSchema = new Schema({
   hashedPassword: String,
   provider: String,
   salt: String,
+  builderProgress: {
+    // null = not enabled, false = enabled but not complete, true = complete.
+    'plan-builder.start':      { type: Boolean, default: true },
+    'plan-builder.basics':     { type: Boolean, default: false },
+    'plan-builder.assets':     { type: Boolean, default: null },
+    'plan-builder.debts':      { type: Boolean, default: null },
+    'plan-builder.spending':   { type: Boolean, default: null },
+    'plan-builder.savings':    { type: Boolean, default: null },
+    'plan-builder.insurances': { type: Boolean, default: null },
+    'plan-builder.tax':        { type: Boolean, default: null },
+    'plan-builder.goals':      { type: Boolean, default: null }
+  },
+  personal: {},
   plan: {}
 });
 

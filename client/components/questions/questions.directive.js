@@ -10,6 +10,7 @@ angular.module('prosperenceApp')
 .directive('questions', function() {
   return {
     restrict: 'E',
+    // transclude: true,
     scope: {
       queries: '=',
       plangroup: '=',
@@ -137,16 +138,28 @@ angular.module('prosperenceApp')
       }
 
       // Creates a new row for the input table.
-      var makeRow = function() {
+      var makeRow = function(property) {
         var row = {};
-        for (var i=0, n=$scope.query.fields.length; i<n; i++) {
-          row[$scope.query.fields[i].label] = '';
+        // Add row for table nested in multi type question.
+        if ($scope.query.type === 'multi') {
+          for (var i=0, n=$scope.query.subqueries.length; i<n; i++) {
+            if ($scope.query.subqueries[i].bind === property) {
+              // console.log($scope.query.subqueries[i].fields.length)
+              for (var j=0, n=$scope.query.subqueries[i].fields.length; j<n; j++) {
+                row[$scope.query.subqueries[i].fields[j].label] = '';
+              }
+            }
+          }
+        } else {
+          for (var i=0, n=$scope.query.fields.length; i<n; i++) {
+            row[$scope.query.fields[i].label] = '';
+          }
         }
         return row;
       };
       $scope.addRow = function(property) {
         $scope.plangroup[property] = $scope.plangroup[property] || [];
-        $scope.plangroup[property].push(makeRow());
+        $scope.plangroup[property].push(makeRow(property));
       };
       $scope.deleteRow = function(index, property) {
         $scope.plangroup[property].splice(index, 1);
@@ -162,6 +175,29 @@ angular.module('prosperenceApp')
         }
         return false;
       };
+
+      // Returns the value of a select option. Options can be defined in two ways:
+      // Either as a value or and an object with a text and value property.
+      $scope.getOptionValue = function(option) {
+        return option.value === undefined ? option : option.value;
+      };
+
+      // Returns true if question is shown or false if not.
+      // Item is only passed in for multi questions, otherwise, check query.
+      $scope.isShown = function(item) {
+        var qc = $scope.query.condition;
+        var queryCondition = qc === undefined || qc === true || qc === 'true' ||
+                             $scope.plangroup[qc] === true || $scope.plangroup[qc] === 'true';
+        // If item or item.condition are undefined, check query condition only.
+        if (!item || item.condition === undefined) {
+          return !!queryCondition;
+        }
+        // If item is defined, then check item.
+        var ic = item.condition;
+        var itemCondition = ic === undefined || ic === true || ic === 'true' ||
+                            $scope.plangroup[ic] === true || $scope.plangroup[ic] === 'true';
+        return !!itemCondition;
+      }
 
       // Check and fix data formatting for non multi-nested date objects.
       var fixDate = function(str) {

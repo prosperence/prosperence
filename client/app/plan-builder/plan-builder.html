@@ -12,10 +12,12 @@
     <!--Sidebar content-->
     <div class="col-sm-2" style="max-width:220px;">
       <ul class="nav nav-pills nav-stacked" style="min-width:120px;">
-        <!-- TODO: Make links disabled until previous sections are completed (allow user to go back and forth between completed sections and the one they're currently working on) -->
-        <li role="presentation" ui-sref-active="active" ng-repeat="section in sections" ng-disabled="!section.enabled">
-          <a ui-sref="{{ section.state }}">
-            <span ng-class="{ 'glyphicon glyphicon-ok': section.complete }" style="color:green; padding-right:4px;"></span>
+        <li role="presentation"
+            ui-sref-active="active"
+            ng-repeat="section in sections"
+            ng-class="{ 'disabled': !stateEnabled(section.state) }">
+          <a ng-click="goToState(section.state)">
+            <span ng-class="{ 'glyphicon glyphicon-ok': stateComplete(section.state) }" style="color:green; padding-right:4px;"></span>
             {{ section.text }}
           </a>
         </li>
@@ -39,22 +41,19 @@
     <a ng-click="" class="btn btn-lg btn-default disabled" ng-show="currentState === 'plan-builder.start'">
       Link with Mint.com
     </a>
-
     <a ng-click="gotonext()" class="btn btn-lg btn-default" ng-show="currentState === 'plan-builder.start'">
       Get started with Plan Builder
     </a>
 
-    <!-- Non-start page buttons -->
+    <!-- Navigation page buttons -->
     <a ng-click="gotoprevious()" class="btn btn-lg btn-default" ng-show="currentState !== 'plan-builder.start'">
       <i class="fa fa-chevron-left" style="margin-right:8px;"></i>
       Previous
     </a>
-
     <a ng-click="gotonext()" class="btn btn-lg btn-default" ng-show="currentState !== 'plan-builder.goals' && currentState !== 'plan-builder.start'">
       Next
       <i class="fa fa-chevron-right" style="margin-left:8px;"></i>
     </a>
-
     <a class="btn btn-lg btn-default" ng-show="currentState === 'plan-builder.goals'">
       Submit
     </a>

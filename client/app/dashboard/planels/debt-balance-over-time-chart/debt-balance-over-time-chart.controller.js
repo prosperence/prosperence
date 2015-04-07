@@ -10,7 +10,7 @@ angular.module('prosperenceApp')
   function buildData() {
     for (var key in debts) {
       for (var i=0, n=debts[key].length; i<n; i++) {
-        totalDebt += debts[key][i].amount;
+        totalDebt += debts[key][i]['amount'];
         data.push({
           name: debts[key][i]['name'],
           data: reductionProjection(debts[key][i])
