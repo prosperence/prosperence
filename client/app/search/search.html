@@ -1,0 +1,40 @@
+<header class="hero-unit" id="banner">
+  <div class="container">
+    <h1>Search Financial Advisors</h1>
+  </div>
+</header>
+
+<div class="container-fluid">
+  <div class="row-fluid">
+
+    <!-- Sidebar -->
+    <div class="col-sm-2 sidebar">
+      <ul class="nav nav-pills nav-stacked">
+        <li class="heading">Keywords</li>
+          <input type="text" class="form-control" placeholder="Search questions." />
+        <li></li>
+        <li class="heading">Categories</li>
+        <li role="presentation" ng-repeat="category in categories">
+          <input type="checkbox"/>
+          {{ category }}
+        </li>
+        <li class="heading">Liscenced In:
+          <select>
+            <option ng-repeat="state in states" value="state">{{ state }}</option>
+          </select>
+        </li>
+        <li>More</li>
+      </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="col-sm-10" style="margin-top: 16px">
+      <ul class="nav nav-tabs nav-stacked">
+        <li>
+          [Search results coming soon]
+        </li>
+      </ul>
+    </div>
+
+  </div>
+</div>

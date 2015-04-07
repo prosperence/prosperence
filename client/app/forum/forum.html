@@ -1,0 +1,55 @@
+<header class="hero-unit" id="banner">
+  <div class="container">
+    <h1>Ask an Advisor</h1>
+    <p class="lead">
+      Search questions or post a new question for advisors to discuss.
+    </p>
+  </div>
+</header>
+
+<div class="container-fluid">
+  <div class="row-fluid">
+
+    <!-- Sidebar -->
+    <div class="col-sm-2 sidebar">
+      <ul class="nav nav-pills nav-stacked">
+        <li class="heading">Keywords</li>
+          <input type="text" class="form-control" placeholder="Search questions." />
+        <li></li>
+        <li class="heading">Categories</li>
+        <li role="presentation" ng-repeat="category in categories">
+          <input type="checkbox"/>
+          {{ category }}
+        </li>
+        <li>
+          <br>
+          <a href="#">My Questions</a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="col-sm-10" style="margin-top: 16px">
+      <ul class="nav nav-tabs nav-stacked" ng-repeat="question in currentQuestions | orderBy:'-rating'">
+        <li>
+          <a href="#" tooltip="{{question.info}}">
+            <div class="question-rating">{{ question.rating }}</div>
+            <span class="question-search-title">{{ question.text }}</span>
+            <div class="question-replies">{{ question.responses.length }} answers</div>
+          </a>
+        </li>
+      </ul>
+      <br>
+      <form class="question-form">
+        <label>Questions sync in realtime.</label>
+        <p class="input-group">
+          <input type="text" class="form-control" placeholder="Ask your question here." ng-model="newQuestion">
+          <span class="input-group-btn">
+            <button type="submit" class="btn btn-primary" ng-click="addQuestion()">Submit Question</button>
+          </span>
+        </p>
+      </form>
+    </div>
+
+  </div>
+</div>

@@ -20,6 +20,7 @@ module.exports = function(config) {
       'client/bower_components/angular-bootstrap/ui-bootstrap-tpls.js',
       'client/bower_components/lodash/dist/lodash.compat.js',
       'client/bower_components/angular-ui-router/release/angular-ui-router.js',
+      'client/bower_components/angular-socket-io/socket.js',
       'client/bower_components/angular-ui-select/dist/select.js',
       'client/bower_components/angular-utils-pagination/dirPagination.js',
       'client/bower_components/angular-local-storage/dist/angular-local-storage.js',

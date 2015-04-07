@@ -28,6 +28,14 @@ angular.module('prosperenceApp')
     'shown': '!getCurrentUser().planBuilderComplete',
     'abstractLink': 'plan-builder'
   }, {
+    'title': 'Find an Advisor',
+    'link': 'search',
+    'shown': true
+  }, {
+    'title': 'Forum',
+    'link': 'forum',
+    'shown': true
+  }, {
     'title': 'University',
     'icon': 'fa fa-graduation-cap',
     'link': 'university.courses',
@@ -58,6 +66,7 @@ angular.module('prosperenceApp')
     return $state.includes(viewLocation);
   };
 })
+// Login and signup modal logic.
 .controller('loginController', function($scope, $state, $modalInstance, Auth, goToSignUp) {
   $scope.showSignUp = goToSignUp;
   $scope.toggleRegister = function(newPage) {
@@ -67,10 +76,8 @@ angular.module('prosperenceApp')
   // Login logic
   $scope.user = {};
   $scope.errors = {};
-
   $scope.login = function(form) {
     $scope.submitted = true;
-
     if (form.$valid) {
       Auth.login({
         email: $scope.user.email,
@@ -88,7 +95,6 @@ angular.module('prosperenceApp')
   // Signup logic
   $scope.register = function(form) {
     $scope.submitted = true;
-
     if (form.$valid) {
       Auth.createUser({
         name: $scope.user.name,

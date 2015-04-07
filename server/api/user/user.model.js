@@ -13,6 +13,10 @@ var UserSchema = new Schema({
   hashedPassword: String,
   provider: String,
   salt: String,
+  isAdvisor: {
+    type: Boolean,
+    default: false
+  },
   builderProgress: {
     // null = not enabled, false = enabled but not complete, true = complete.
     'plan-builder.start':      { type: Boolean, default: true },
