@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('prosperenceApp')
-.controller('NavbarCtrl', function($scope, $state, Auth, $modal) {
+.controller('NavbarCtrl', function($scope, $rootScope, $state, Auth, $modal) {
   $scope.isCollapsed = true;
   $scope.isLoggedIn = Auth.isLoggedIn;
   $scope.isAdmin = Auth.isAdmin;
@@ -33,8 +33,9 @@ angular.module('prosperenceApp')
     'shown': true
   }, {
     'title': 'Forum',
-    'link': 'forum',
-    'shown': true
+    'link': 'forum.search',
+    'shown': true,
+    'abstractLink': 'forum'
   }, {
     'title': 'University',
     'icon': 'fa fa-graduation-cap',
@@ -55,6 +56,7 @@ angular.module('prosperenceApp')
       }
     });
   };
+  $rootScope.openLoginModal = $scope.openLoginModal;
 
   $scope.logout = function() {
     Auth.logout();

@@ -144,7 +144,6 @@ angular.module('prosperenceApp')
         if ($scope.query.type === 'multi') {
           for (var i=0, n=$scope.query.subqueries.length; i<n; i++) {
             if ($scope.query.subqueries[i].bind === property) {
-              // console.log($scope.query.subqueries[i].fields.length)
               for (var j=0, n=$scope.query.subqueries[i].fields.length; j<n; j++) {
                 row[$scope.query.subqueries[i].fields[j].label] = '';
               }

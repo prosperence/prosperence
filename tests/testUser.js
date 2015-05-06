@@ -3,6 +3,7 @@
 var testUser = {
   provider: 'local',
   email: 'test@test.com',
+  name: 'Test User',
   password: 'test',
   builderProgress: {
     // Object to track which sections of plan-builder the user has completed.
@@ -15,6 +16,10 @@ var testUser = {
     insurances: true,
     tax: true,
     goals: true
+  },
+  forum: {
+    starred: {},
+    comments: {}
   },
   personal: {
     // Contains the user's personal inforamtion (and spouse if applicable).

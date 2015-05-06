@@ -9,21 +9,16 @@ var validationError = function(res, err) {
   return res.json(422, err);
 };
 
-/**
- * Get list of users
- * restriction: 'admin'
- */
+// Get list of users. Must be admin.
 exports.index = function(req, res) {
-  User.find({}, '-salt -hashedPassword', function (err, users) {
+  User.find({}, '-salt -hashedPassword', function(err, users) {
     if(err) return res.send(500, err);
     res.json(200, users);
   });
 };
 
-/**
- * Creates a new user
- */
-exports.create = function (req, res, next) {
+// Create a new user.
+exports.create = function(req, res, next) {
   var newUser = new User(req.body);
   newUser.provider = 'local';
   newUser.role = 'user';
@@ -34,23 +29,17 @@ exports.create = function (req, res, next) {
   });
 };
 
-/**
- * Get a single user
- */
+// Get a single user.
 exports.show = function (req, res, next) {
   var userId = req.params.id;
-
-  User.findById(userId, function (err, user) {
+  User.findById(userId, function(err, user) {
     if (err) return next(err);
     if (!user) return res.send(401);
     res.json(user.profile);
   });
 };
 
-/**
- * Deletes a user
- * restriction: 'admin'
- */
+// Deletes a user. Must be admin.
 exports.destroy = function(req, res) {
   User.findByIdAndRemove(req.params.id, function(err, user) {
     if(err) return res.send(500, err);
@@ -58,9 +47,7 @@ exports.destroy = function(req, res) {
   });
 };
 
-/**
- * Change a users password
- */
+// Change a users password.
 exports.changePassword = function(req, res, next) {
   var userId = req.user._id;
   var oldPass = String(req.body.oldPassword);
@@ -79,33 +66,56 @@ exports.changePassword = function(req, res, next) {
   });
 };
 
-/**
- * Get my info
- */
+// Get my info.
 exports.me = function(req, res, next) {
   var userId = req.user._id;
-  User.findOne({
-    _id: userId
-  }, '-salt -hashedPassword', function(err, user) { // don't ever give out the password or salt
+  User.findById(userId, function (err, user) {
     if (err) return next(err);
     if (!user) return res.json(401);
     res.json(user);
   });
 };
 
-/**
- * Authentication callback
- */
+// Authentication callback.
 exports.authCallback = function(req, res, next) {
   res.redirect('/');
 };
 
-exports.updatePlan = function (req, res, next) {
+// Update a user's starred questions.
+exports.updateForumStars = function(req, res, next) {
   var userId = req.user._id;
-  var newPlan = req.body.newPlan
-  User.findOne({
-    _id: userId
-  }, '-salt -hashedPassword', function(err, user) { // don't ever give out the password or salt
+  var starred = req.body.starred;
+  User.findById(userId, function (err, user) {
+    if (err) return next(err);
+    if (!user) return res.json(401);
+    user.forum.starred = starred;
+    user.save(function(err) {
+      if (err) return validationError(res, err);
+      res.send(200);
+    });
+  });
+};
+
+// Update a user's forum comment voting.
+exports.updateForumComments = function(req, res, next) {
+  var userId = req.user._id;
+  var comments = req.body.comments;
+  User.findById(userId, function (err, user) {
+    if (err) return next(err);
+    if (!user) return res.json(401);
+    user.forum.comments = comments;
+    user.save(function(err) {
+      if (err) return validationError(res, err);
+      res.send(200);
+    });
+  });
+};
+
+// Update specific user plan by overwriting the user's current plan.
+exports.updatePlan = function(req, res, next) {
+  var userId = req.user._id;
+  var newPlan = req.body.newPlan;
+  User.findById(userId, function (err, user) {
     if (err) return next(err);
     if (!user) return res.json(401);
     user.plan = newPlan;
@@ -114,4 +124,4 @@ exports.updatePlan = function (req, res, next) {
       res.send(200);
     });
   });
-}
+};

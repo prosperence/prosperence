@@ -1,0 +1,55 @@
+<div class="questionViewHeader">
+
+  <div class="btn-group" role="group">
+    <button type="button" class="btn btn-default" ng-click="goBack()">
+      <i class="fa fa-chevron-left"></i>
+    </button>
+    <button type="button" class="btn btn-default" ng-click="starQuestion()">
+      <i class="fa" ng-class=" !!user.forum.starred[currentQuestion._id] ? 'fa-star' : 'fa-star-o' "></i>
+    </button>
+  </div>
+
+  <button type="button"
+          class="btn"
+          style="float:right"
+          ng-click="deleteQuestion()"
+          ng-if="currentQuestion.author === user.name">
+          Delete Question
+  </button>
+
+  <h2>{{ currentQuestion.text }}</h2>
+</div>
+<hr>
+
+<div class="questionViewComments">
+  <div ng-repeat="comment in currentQuestion.comments | orderBy:'-rating'" class="comment">
+
+    <!-- Upvote/downvote buttons -->
+    <div class="rating">
+      <div>{{ comment.rating }}</div>
+    </div>
+    <div class="btn-group-vertical buttons" role="group">
+      <button type="button" class="btn btn-default" ng-click="vote(comment, 'up')">
+        <!-- <i class="fa fa-thumbs-o-up"></i> -->
+        <i class="fa" ng-class=" !!user.forum.comments[comment._id] ? 'fa-thumbs-up' : 'fa-thumbs-o-up' "></i>
+      </button>
+      <button type="button" class="btn btn-default" ng-click="vote(comment, 'down')">
+        <!-- <i class="fa fa-thumbs-o-down"></i> -->
+        <i class="fa" ng-class=" user.forum.comments[comment._id] === false ? 'fa-thumbs-down' : 'fa-thumbs-o-down' "></i>
+      </button>
+    </div>
+
+    <!-- Comment body -->
+    <div class="body">
+      <h3 class="name">{{ comment.name }}</h3>
+      <span class="text">{{ comment.text }}</span>
+    </div>
+    <hr>
+
+  </div>
+</div>
+
+<div class="questionViewNewComment" ng-if="user.isAdvisor === true">
+  <h3>Answer Question:</h3>
+  <input type="text" class="form-control" ng-model="newComment" ng-enter="addComment()"/>
+</div>

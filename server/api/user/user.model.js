@@ -5,19 +5,23 @@ var Schema = mongoose.Schema;
 var crypto = require('crypto');
 
 var UserSchema = new Schema({
-  email: { type: String, lowercase: true },
-  role: {
+  email: { // A user's email address must be unique.
+    type: String,
+    lowercase: true
+  },
+  name: String, // This is for display purposes and does not have to be unique.
+  role: { // 'user' or 'admin'.
     type: String,
     default: 'user'
   },
   hashedPassword: String,
   provider: String,
   salt: String,
-  isAdvisor: {
+  isAdvisor: { // Advisors and non-advisors have different privileges.
     type: Boolean,
     default: false
   },
-  builderProgress: {
+  builderProgress: { // Tracks how much of the plan builder the user has completed.
     // null = not enabled, false = enabled but not complete, true = complete.
     'plan-builder.start':      { type: Boolean, default: true },
     'plan-builder.basics':     { type: Boolean, default: false },
@@ -29,8 +33,13 @@ var UserSchema = new Schema({
     'plan-builder.tax':        { type: Boolean, default: null },
     'plan-builder.goals':      { type: Boolean, default: null }
   },
-  personal: {},
-  plan: {}
+  // starredQuestions: {},
+  forum: { // Tracks forum data, starred questions, comment votes, etc.
+    starred: {}, // Object of question ID strings that the user has starred.
+    comments: {} // Up/down votes for comments.
+  },
+  personal: {}, // Personal information: name, age, address, bday, etc.
+  plan: {} // This is the user's financial plan, this is the big thing.
 });
 
 /**

@@ -5,21 +5,26 @@ var Schema = mongoose.Schema;
 
 var QuestionSchema = new Schema({
   text: String, // This is the actual question.
-  active: Boolean, // If question is active or not.
+  active: { // If question is active or not.
+    type: Boolean,
+    default: true
+  },
   author: String, // Who asked the question.
-  rating: { // Keeps track of upvotes and downvotes.
+  authorID: String, // ID of the author.
+  rating: { // Keeps track of how many users starred the question.
     type: Number,
     default: 0
   },
-  responses: [{ // Replies to the question.
+  timestamp: {}, // Date object of when the question was asked.
+  comments: [{ // Replies to the question.
     name: String, // Name of who replied (links to profile if advisor).
+    comenterID: String, // User ID of the advisor who authored the comment.
     text: String, // Reply message.
-    isAdvisor: Boolean, // True is the reply is from an advisor, false if not.
-    type: {
-      type: { type: String }
+    rating: { // Keeps track of up/down votes of the comment.
+      type: Number,
+      default: 0
     },
-    registrationEnabled: Boolean,
-    checkinEnabled: Boolean
+    timestamp: { type: Date, default: Date.now } // Date object of when the comment was authored.
   }]
 });
 
